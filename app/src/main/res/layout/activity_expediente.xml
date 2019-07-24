@@ -45,7 +45,7 @@
         app:layout_constraintVertical_bias="0.221" />
 
     <TextView
-        android:id="@+id/textView27"
+        android:id="@+id/tvNombrePaciente"
         android:layout_width="221dp"
         android:layout_height="56dp"
         android:text="TextView"
@@ -58,6 +58,7 @@
         app:layout_constraintVertical_bias="0.22" />
 
     <ListView
+        android:id="@+id/lbSesiones"
         android:layout_width="363dp"
         android:layout_height="343dp"
         app:layout_constraintBottom_toBottomOf="parent"
