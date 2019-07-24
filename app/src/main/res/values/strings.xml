@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">CaitaMobile</string>
-<<<<<<< HEAD
     <string name="title_activity_inicio">Inicio</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,6 +15,4 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="title_activity_menu">Menu</string>
-=======
->>>>>>> b509aef3e4adcd667ee8497610f6e5b62d69a455
 </resources>

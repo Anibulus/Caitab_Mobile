@@ -9,10 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> b509aef3e4adcd667ee8497610f6e5b62d69a455
 public class MainActivity extends AppCompatActivity {
         EditText etUsuarioEmp;
         EditText etPassEmp;
@@ -31,25 +28,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
                 Intent menu = new Intent(MainActivity.this, Menu.class);
                 startActivity(menu);
 
             }
         });
 
-
-
-
-=======
-                    Intent ventana = new Intent(MainActivity.this, Main2Activity.class);
-                    startActivity(ventana);
+        btnCerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.exit(0);
             }
         });
 
->>>>>>> b509aef3e4adcd667ee8497610f6e5b62d69a455
+
+
+
     }
 }

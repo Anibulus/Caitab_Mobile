@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 public class Menu extends AppCompatActivity {
 
     ImageButton btnAgenda;
-    ImageButton btnExpediente;
+    ImageButton btnPacientes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class Menu extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         btnAgenda = (ImageButton)  findViewById(R.id.btnAgenda);
-        btnExpediente = (ImageButton) findViewById(R.id.btnExpediente);
+        btnPacientes = (ImageButton) findViewById(R.id.btnPacientes);
 
         btnAgenda.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,12 +27,13 @@ public class Menu extends AppCompatActivity {
 
             }
         });
-        btnExpediente.setOnClickListener(new View.OnClickListener() {
+        btnPacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
+
 
     }
 }

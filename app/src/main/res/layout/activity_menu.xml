@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/agendados" />
 
     <ImageButton
-        android:id="@+id/btnExpediente"
+        android:id="@+id/btnPacientes"
         android:layout_width="165dp"
         android:layout_height="165dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expediente"
+        android:text="Paciente"
         android:textColor="#8BC34A"
         android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
