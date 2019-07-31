@@ -25,7 +25,7 @@ public class conexionMySQL {
             Connection conn=null;
             String ConnURL=null;
             try{
-                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                Class.forName("con.mysql.jdbc.Driver").newInstance();
                 conn= DriverManager.getConnection(url,un,password);
             }catch(SQLException se){
                 Log.e("Error", se.getMessage());
