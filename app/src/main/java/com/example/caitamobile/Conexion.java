@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion{
-    String ip = "192.168.100.151:3306";
+    String ip = "192.168.100.151:3306";//La ip puede cambiar
     String db = "caitab";
     String un = "root";
     String password = "";
