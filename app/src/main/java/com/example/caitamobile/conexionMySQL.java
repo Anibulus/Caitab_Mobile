@@ -9,17 +9,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class conexionMySQL {
-        String ip = "10.0.2.2";//La ip cambia
-        String db = "caita";
+        String ip = "192.168.100.151";//La ip cambia
+        String db = "caitab";
         String un = "root";
         String password = "";
         String url = "jdbc:mysql://" + ip + "/" + db;
 
         @SuppressLint("NewApi")
         public Connection CONN(){
-            //Politicas o reglas de como se gdebe de conectar
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Build();
-            StrictMode.setTreadPolicy(policy);
+            //Politicas o reglas de como se debe de conectar
+            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Build();
+            //StrictMode.setTreadPolicy(policy);
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
             Connection conn=null;
             String ConnURL=null;
             try{
