@@ -4,90 +4,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".Agenda">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="276dp"
-        android:layout_height="282dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+    <EditText
+        android:id="@+id/etFechaInicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Fecha inicial:"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.132" />
+
+    <EditText
+        android:id="@+id/etFechaFinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Fecha final:"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.247" />
+
+    <Button
+        android:id="@+id/btnBuscarFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.832"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.199" />
+
+    <ListView
+        android:id="@+id/lvCitas"
+        android:layout_width="333dp"
+        android:layout_height="352dp"
+        android:background="#9CD86D"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.106"
-        app:srcCompat="@drawable/iconcaitamobile" />
+        app:layout_constraintVertical_bias="0.649" />
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="238dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Inicio de Sesión"
-        android:textAlignment="center"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp"
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agenda"
+        android:textColor="#8BC34A"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.376" />
-
-    <EditText
-        android:id="@+id/etUsuarioEmp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Usuario:"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.533" />
-
-    <EditText
-        android:id="@+id/etPassEmp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Contrasena:"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.655" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <Button
-        android:id="@+id/btnIngresar"
+        android:id="@+id/btnRegresar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingresar"
+        android:text="Regresar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.306"
+        app:layout_constraintHorizontal_bias="0.871"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.828" />
-
-    <Button
-        android:id="@+id/btnCerrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cerrar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.693"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintVertical_bias="0.938" />
 
 </android.support.constraint.ConstraintLayout>
