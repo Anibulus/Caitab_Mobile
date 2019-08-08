@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AgendarCita">
+
+    <EditText
+        android:id="@+id/edtNombrePaciente"
+        android:hint="Ingrese nombre del Peciente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/edtDescripcion"
+        android:layout_below="@+id/edtNombrePaciente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese: " />
+    <EditText
+        android:id="@+id/edtFecha"
+        android:layout_below="@+id/edtDescripcion"
+        android:hint="Ingrese: "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
