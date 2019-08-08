@@ -8,13 +8,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion{
+    //Computadora de Wicho
     String ip = "192.168.100.151:3306";//La ip puede cambiar
     String db = "caitab";
     String un = "monty";
     String password = "some_pass";
     //Usuario en compu de: (DAVID, di ves esto anade tu usuario para solo cambiarlo segun sea la computadora)
-    //String un = "root";
-    //String password = "";
+    /*
+    String ip = "192.168.15.8:3306";//La ip puede cambiar
+    String db = "caitab";
+    String un = "caitab";
+    String password = "1234";
+    */
     String url = "jdbc:mysql://" + ip + "/" + db;
 
     @SuppressLint("NewApi")

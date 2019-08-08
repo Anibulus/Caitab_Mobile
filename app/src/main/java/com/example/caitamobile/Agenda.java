@@ -29,6 +29,7 @@ public class Agenda extends AppCompatActivity {
         etFechaFinal = (EditText) findViewById(R.id.etFechaFinal);
         btnBuscarFecha = (Button) findViewById(R.id.btnBuscarFecha);
         btnRegresar = (Button) findViewById(R.id.btnLimpiar);
+
         lvCitas = (ListView) findViewById(R.id.lvCitas);
 
         ArrayList datosLista = new ArrayList();
