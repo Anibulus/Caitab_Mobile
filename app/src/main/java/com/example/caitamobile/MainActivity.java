@@ -36,8 +36,11 @@ public class MainActivity extends AppCompatActivity {
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inicioSesion is=new inicioSesion();
-                is.execute("");
+                Intent ventana = new Intent(MainActivity.this, Menu.class);
+                startActivity(ventana);
+                //Se ha comentado esta linea de codigo para probar la navegacion de activitys
+                //inicioSesion is=new inicioSesion();
+                //is.execute("");
             }
         });
 

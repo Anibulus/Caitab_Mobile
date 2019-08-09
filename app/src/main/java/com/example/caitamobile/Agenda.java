@@ -1,17 +1,20 @@
 package com.example.caitamobile;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class Agenda extends AppCompatActivity {
+public class Agenda extends AppCompatActivity implements View.OnClickListener {
 
     EditText etFechaInicio;
     EditText etFechaFinal;
@@ -19,6 +22,8 @@ public class Agenda extends AppCompatActivity {
     Button btnRegresar;
     ListView lvCitas;
 
+    //Variables necesarias para pick date
+    private int dia, mes, ano;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +54,33 @@ public class Agenda extends AppCompatActivity {
             }
         });
 
-    }
-}
+        //Aqui comienza el codigo para el pick date requerido
+        etFechaInicio.setOnClickListener(this);
+        etFechaFinal.setOnClickListener(this);
+        //Se vuelven escuchadores para al momento de ser cliqueados se haga la funcion de abajo (onClick)
+
+    }//Fin del metodo onCreate
+
+    @Override
+    public void onClick(View view) {
+        if(view==etFechaInicio){
+
+            final Calendar c= Calendar.getInstance();
+            dia=c.get(Calendar.DAY_OF_MONTH);
+            mes=c.get(Calendar.MONTH);
+            ano=c.get(Calendar.YEAR);
+
+            DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                    etFechaInicio.setText(i2+"-"+(i1+1)+"-"+i);//Se le agrega 1 al mes porque se cuenta como arreglo
+                }
+            },dia,mes,ano);
+
+            dpd.show();
+
+        }else if(view==etFechaFinal){
+
+        }
+    }//Fin del metodo on click
+}//Fin de la clase
