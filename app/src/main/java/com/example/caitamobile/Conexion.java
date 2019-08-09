@@ -17,9 +17,7 @@ public class Conexion{
 
     @SuppressLint("NewApi")
     public Connection CONN(){
-
-        //TODO - La puse rapido asi que revisa si el ThreadPolicy.Builder().build() es correcto
-        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().build();//Politicas o reglas de como se gdebe de conectar
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();//Politicas o reglas de como se gdebe de conectar
         StrictMode.setThreadPolicy(policy);
         Connection conn=null;
         String ConnURL=null;
