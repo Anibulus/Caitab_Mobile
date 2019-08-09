@@ -2,29 +2,24 @@ package com.example.caitamobile;
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion{
-    //Computadora de Wicho
-    String ip = "192.168.100.151:3306";//La ip puede cambiar
+    String ip = "10.0.2.2";
     String db = "caitab";
-    String un = "monty";
-    String password = "some_pass";
-    //Usuario en compu de: (DAVID, di ves esto anade tu usuario para solo cambiarlo segun sea la computadora)
-    /*
-    String ip = "192.168.15.8:3306";//La ip puede cambiar
-    String db = "caitab";
-    String un = "caitab";
-    String password = "1234";
-    */
+    String un = "root";
+    String password = "";
     String url = "jdbc:mysql://" + ip + "/" + db;
 
     @SuppressLint("NewApi")
     public Connection CONN(){
-        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();//Politicas o reglas de como se gdebe de conectar
+
+        //TODO - La puse rapido asi que revisa si el ThreadPolicy.Builder().build() es correcto
+        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().build();//Politicas o reglas de como se gdebe de conectar
         StrictMode.setThreadPolicy(policy);
         Connection conn=null;
         String ConnURL=null;
@@ -41,4 +36,3 @@ public class Conexion{
         return conn;
     }//Fin del metodo conexion
 }//Fin de la clase conexion
-

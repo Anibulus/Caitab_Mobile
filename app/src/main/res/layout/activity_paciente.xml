@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Paciente">
+    tools:context=".Pacientes">
 
     <Button
         android:id="@+id/btnDatosGenerales"
@@ -37,6 +37,7 @@
         android:layout_width="277dp"
         android:layout_height="47dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.477"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -54,20 +55,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.631" />
-
-    <Button
-        android:id="@+id/btnMenuPrincipal"
-        android:layout_width="179dp"
-        android:layout_height="54dp"
-        android:text="Menu Principal"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.776" />
->>>>>>> 3a5e28d1b92b8d1fc72638ad8d8a057908ac1375
 
     <Button
         android:id="@+id/btnAgendarCita"

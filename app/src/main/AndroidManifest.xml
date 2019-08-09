@@ -15,7 +15,7 @@
         <activity android:name=".datosCita"></activity>
         <activity android:name=".Expediente" />
         <activity android:name=".DatosGenerales" />
-        <activity android:name=".Paciente" />
+        <activity android:name=".Pacientes" />
         <activity android:name=".Descripcion" />
         <activity android:name=".General" />
         <activity android:name=".Agenda" />

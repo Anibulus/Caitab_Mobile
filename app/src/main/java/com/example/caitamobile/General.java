@@ -13,8 +13,7 @@ public class General extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_datos_cita);//Supuestamente esta es la que debe de quedar
-        //setContentView(R.layout.activity_general);
+        setContentView(R.layout.activity_datos_cita);
 
         btnDesc = (Button)  findViewById(R.id.btnDesc);
 

@@ -1,57 +1,102 @@
 package com.example.caitamobile;
 
-public class Pacientes {
-    private int id_paciente;
-    private String nombre;
-    private String apellidos;
-    private int telefono;
-    private String correo;
+import android.content.Intent;
+import android.os.Parcelable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Spinner;
 
-    public Pacientes(int id_paciente, String nombre, String apellidos, int telefono, String correo) {
-        this.id_paciente = id_paciente;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.telefono = telefono;
-        this.correo = correo;
+import com.example.caitamobile.Constantes.IntentExtras;
+import com.example.caitamobile.Constantes.ListaActividades;
+import com.example.caitamobile.modelo.Paciente;
+import com.example.caitamobile.modelo.Usuario;
+
+public class Pacientes extends AppCompatActivity {
+
+    private Usuario usuario;
+    private String desde;
+
+    private Button btnDatosGenerales;
+    private Button btnAgendarCita;
+    private Button btnVerExpediente;
+    private Spinner spPacientes;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_paciente);
+
+        Intent intent = getIntent();
+        usuario = intent.getParcelableExtra(IntentExtras.USUARIO.llave);
+        desde = intent.getStringExtra(IntentExtras.DESDE.llave);
+
+        if(usuario == null)
+            expulsar();
+
+        btnDatosGenerales = findViewById(R.id.btnDatosGenerales);
+        btnAgendarCita = findViewById(R.id.btnAgendarCita);
+        btnVerExpediente = findViewById(R.id.btnVerExpediente);
+
+        btnDatosGenerales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* INDICA desde QUE VISTA SE ESTA MANDANDO A LLAMAR EL MENU
+                 * HACIENDO USO DE ENUMS PARA EVITAR ERRORES POR TYPOS
+                 * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
+                 *
+                 */
+                Paciente paciente = (Paciente) spPacientes.getSelectedItem();
+
+                Intent intent = new Intent(Pacientes.this, DatosGenerales.class);
+                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                intent.putExtra(IntentExtras.PACIENTE.llave, paciente);
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
+                startActivity(intent);
+            }
+        });
+
+        btnAgendarCita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* INDICA desde QUE VISTA SE ESTA MANDANDO A LLAMAR EL MENU
+                 * HACIENDO USO DE ENUMS PARA EVITAR ERRORES POR TYPOS
+                 * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
+                 *
+                 */
+                Paciente paciente = (Paciente) spPacientes.getSelectedItem();
+
+                Intent intent = new Intent(Pacientes.this, datosCita.class);
+                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                intent.putExtra(IntentExtras.PACIENTE.llave, paciente);
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
+                startActivity(intent);
+            }
+        });
+
+        btnVerExpediente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* INDICA desde QUE VISTA SE ESTA MANDANDO A LLAMAR EL MENU
+                 * HACIENDO USO DE ENUMS PARA EVITAR ERRORES POR TYPOS
+                 * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
+                 *
+                 */
+                Paciente paciente = (Paciente) spPacientes.getSelectedItem();
+
+                Intent intent = new Intent(Pacientes.this, Expediente.class);
+                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                intent.putExtra(IntentExtras.PACIENTE.llave, paciente);
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
+                startActivity(intent);
+            }
+        });
     }
 
-    public int getId_paciente() {
-        return id_paciente;
-    }
-
-    public void setId_paciente(int id_paciente) {
-        this.id_paciente = id_paciente;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public int getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(int telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    private void expulsar() {
+        usuario = null;
+        Intent intent = new Intent(Pacientes.this, MainActivity.class);
+        startActivity(intent);
     }
 }
