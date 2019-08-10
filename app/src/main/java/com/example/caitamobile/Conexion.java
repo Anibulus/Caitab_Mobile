@@ -9,10 +9,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion{
-    String ip = "10.0.2.2";
+    String ip = "192.168.15.6:3306";
     String db = "caitab";
-    String un = "root";
-    String password = "";
+    String un = "caitab";
+    String password = "1234";
     String url = "jdbc:mysql://" + ip + "/" + db;
 
     @SuppressLint("NewApi")
