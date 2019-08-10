@@ -55,6 +55,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         btnLimpiar = findViewById(R.id.btnLimpiar);
         lvCitas = findViewById(R.id.lvCitas);
 
+
         final ArrayList<Cita> citas = consultarCitas();
 
         // TODO - SE NECESITA CREAR UN ADAPTER PERSONALIZADO PARA LOS OBJETOS QUE VA A MOSTRAR EL LIST VIEW
@@ -116,9 +117,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    etFechaFinal.setText(i2+" "+i1+" "+i);
+                    etFechaFinal.setText(i2+"/"+(i1+1)+"/"+i);
                 }
-            },dia,mes,ano);
+            },ano,mes,dia);
             dpd.show();
         }else if(view==etFechaInicio){
             final Calendar c= Calendar.getInstance();
@@ -129,9 +130,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    etFechaInicio.setText(i2+" "+i1+" "+i);
+                    etFechaInicio.setText(i2+"/"+(i1+1)+"/"+i);
                 }
-            },dia,mes,ano);
+            },ano,mes,dia);
             dpd.show();
         }
 
