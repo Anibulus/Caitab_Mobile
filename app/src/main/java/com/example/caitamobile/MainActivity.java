@@ -2,7 +2,6 @@ package com.example.caitamobile;
 
 import android.content.Intent;
 import android.database.SQLException;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,39 +13,67 @@ import com.example.caitamobile.Constantes.ListaActividades;
 import com.example.caitamobile.Constantes.IntentExtras;
 import com.example.caitamobile.modelo.Usuario;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 
 public class MainActivity extends AppCompatActivity {
-    EditText etUsuario;
-    EditText etContrasenia;
-    Button btnIngresar;
-    Button btnCerrar;
-    Conexion con;
+        private EditText etUsuario;
+        private EditText etContrasenia;
+        private Button btnIngresar;
+        private Button btnCerrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        etUsuario = (EditText) findViewById(R.id.etUsuario);
-        etContrasenia = (EditText) findViewById(R.id.etContrasenia);
-        btnIngresar = (Button) findViewById(R.id.btnIngresar);
-        btnCerrar = (Button) findViewById(R.id.btnCerrar);
-        con=new Conexion();
-
+        etUsuario = findViewById(R.id.etUsuario);
+        etContrasenia = findViewById(R.id.etContrasenia);
+        btnIngresar = findViewById(R.id.btnIngresar);
+        btnCerrar = findViewById(R.id.btnCerrar);
 
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                inicioSesion is=new inicioSesion();
-                is.execute("");
+            public void onClick(View v) {
+
+                Usuario usuario = validarCuenta(etUsuario.getText().toString(), etContrasenia.getText().toString());
+
+                if(usuario == null) {
+
+                    String texto = "Usuario o contraseña incorrectos";
+                    Toast mensaje = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_SHORT);
+                    mensaje.show();
+
+                } else {
+
+                    mostrarSiguienteVista(usuario);
+
+                }
+
+            }
+
+            private Usuario validarCuenta(String usuario, String contrasenia) {
+                try {
+
+                    // TODO - USUARIO = ... CONSULTA SQL
+                    return new Usuario(1, usuario, contrasenia); // ACTUALMENTE RETORNANDO OBJETO DUMMY
+
+                } catch (SQLException ex) {
+                    return null;
+                }
+            }
+
+            private void mostrarSiguienteVista(Usuario usuario) {
+
+                /* INDICA DESDE QUE VISTA SE ESTA MANDANDO A LLAMAR EL MENU
+                 * HACIENDO USO DE ENUMS PARA EVITAR ERRORES POR TYPOS
+                 * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
+                 *
+                 */
+                Intent intent = new Intent(MainActivity.this, Menu.class);
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MAIN_ACTIVITY.nombre);
+                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                startActivity(intent);
             }
         });
-
-
 
         btnCerrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,72 +83,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }//Aqui termina el ONCreate
-
-    public class inicioSesion extends AsyncTask<String,String,String> {
-        boolean entrar = false;
-        String mensaje;
-        String usuario = etUsuario.getText().toString();
-        String contra = etContrasenia.getText().toString();
-
-        @Override
-        public void onPreExecute() {
-            //pbInicio.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onPostExecute(String r) {
-            //pbInicio.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), r, Toast.LENGTH_LONG).show();
-            if (entrar) {
-                Intent ventana = new Intent(MainActivity.this, Menu.class);
-                startActivity(ventana);
-            }//Fin de el si Entrar es verdadero
-        }//Termina onPostExecute(String r)
-
-        @Override
-        protected String doInBackground(String... strings) {
-            if (usuario.trim().equals("") || contra.trim().equals("")) {
-                mensaje = "No se permiten campos vacios";
-            } else {
-                System.out.println("----Entro a validar");
-                Connection conn = con.CONN();
-                System.out.println("----Entro a validar2");
-                if (conn!=null) {
-                    System.out.println("----Entro a validar3");
-                    String query = "select * from usuario where Usuario=? and Contrasenia=?";
-                    try {
-                        PreparedStatement ps = conn.prepareStatement(query);
-                        ps.setString(1, usuario);
-                        ps.setString(2, contra);
-                        ResultSet rs = ps.executeQuery();
-                        if (rs.next()) {
-                            mensaje = "Bienvenido al Sistema";
-                            entrar = true;
-                        } else {
-                            mensaje = "Usuario o contrasena invalidos";
-                        }
-                    } catch (SQLException e) {
-                        //e.printStackTrace();//el usuario final no debe ver el error que esta sucediendo
-                        mensaje = "Error en la operacion de base de datos: " + e.getMessage();
-                    } catch (java.sql.SQLException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    mensaje = "Error al conectar la base de datos";
-                }
-                /*try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }*/
-            }
-
-            return mensaje;
-        }//Fin del metodo do in background
-    }//Fin de la clase secundaria
-
-
-
-}
-
-
+}//Aqui termina la clase
