@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
-    String ip="192.168.43.124:1433";  /*LA CONEXION SIEMPRE SE PIDE DE MANERA REMOTA*/ //LA IP SE ASIGNA A LA QUE LA RED SE ASIGNA CON EL SERVIDOR
+    String ip="192.168.43.125:1433";  /*LA CONEXION SIEMPRE SE PIDE DE MANERA REMOTA*/ //LA IP SE ASIGNA A LA QUE LA RED SE ASIGNA CON EL SERVIDOR
     String classs="net.sourceforge.jtds.jdbc.Driver";
     String dbname="Caitab";
     String usuario="sa";
