@@ -71,6 +71,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
          */
         ArrayList<Cita> citas=null;
         try {
+            System.out.println("--------aqui estoy -----------");
             citas = consultarCitas();
         } catch (SQLException e) {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
@@ -112,7 +113,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 /**
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
-                if(!etFechaInicio.equals("")&&!etFechaFinal.equals("")){
+                if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
                     // TODO - BUSCAR DATOS EN BASE A LA INFORMACIÓN PROPORCIONADA POR EL USUARIO
                 }//Fin del if de fechas
                 else{
@@ -178,9 +179,10 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         ArrayList<Cita> citas= new ArrayList<>();
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
+            System.out.println("------- Tengo la conexion");
             PreparedStatement ps;
             String query="";
-            if(!etFechaInicio.equals("")&&!etFechaFinal.equals("")){
+            if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
                 //TODO termiar la consulta para que sea completa segun los valores de las fechas
                 query="select * from citas between ? and ?";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
@@ -191,17 +193,21 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 ps.setInt();
                 */
             }else{
-                query="select * from citas";
+                // todo ser especifico para el empleado activo
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli\n" +
+                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli";
                 ps=conn.prepareCall(query);
             }//Fin de la validacion que comprueba las fechas
 
+            System.out.println("----------Validacion de fechas");
             ResultSet rs=ps.executeQuery();
+            System.out.println("--------------ejecuto la consulta");
             while (rs.next()) {//TODO verificar qure el nombre de los campos sea el correcto
                 /**
                  * Crea un objeto cita llenandolo con todos los valores
                  * y poniendolos en el arraylist llenandolo independiente al
                  */
-                Cita c=new Cita(rs.getInt("ID_Cli"),rs.getString("nombreCli"), rs.getString("apellidoCli"), rs.getString("telefonoCli"), rs.getString("correo"), rs.getString("fecha"), rs.getString("hora"));
+                Cita c=new Cita(rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), "8:00");
                 citas.add(c);
 
             }//Aqui termina el while
