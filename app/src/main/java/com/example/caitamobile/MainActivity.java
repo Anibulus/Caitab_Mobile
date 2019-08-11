@@ -69,28 +69,33 @@ public class MainActivity extends AppCompatActivity {
                  * donde se llama la funcion
                  */
                 Usuario usu=null;
-                Connection conn = conexionMySQL.CONN();
-                if (conn!=null) {
-                    String query = "select * from Usuario where Usuario=? and Contrasenia=?";
+                if(!usuario.equals("")&&!contrasenia.equals("")) {
+                    Connection conn = conexionMySQL.CONN();
+                    if (conn != null) {
+                        String query = "select * from Usuario where Usuario=? and Contrasenia=?";
 
-                    PreparedStatement ps = null;
-                     ps = conn.prepareStatement(query);
-                     ps.setString(1, usuario);
-                     ps.setString(2, contrasenia);
-                     ResultSet rs = ps.executeQuery();
-                     if (rs.next()) {
-                         /**
-                          * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
-                          */
-                         usu=new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
-                     } else {
-                         Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
-                         etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
-                     }
-                    conn.close();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No se ha podido conectar a la base de Datos", Toast.LENGTH_SHORT).show();
-                }//Fin de SI la conexion a la base de datos es diferente de nula
+                        PreparedStatement ps = null;
+                        ps = conn.prepareStatement(query);
+                        ps.setString(1, usuario);
+                        ps.setString(2, contrasenia);
+                        ResultSet rs = ps.executeQuery();
+                        if (rs.next()) {
+                            /**
+                             * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
+                             */
+                            usu = new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
+                            etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
+                        }
+                        conn.close();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No se ha podido conectar a la base de Datos", Toast.LENGTH_SHORT).show();
+                    }//Fin de SI la conexion a la base de datos es diferente de nula
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "No se permiten campos vacios", Toast.LENGTH_SHORT).show();
+                }
                 /**
                  * Retorna al usuario
                  */
