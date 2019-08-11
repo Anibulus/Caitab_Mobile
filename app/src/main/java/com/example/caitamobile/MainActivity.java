@@ -54,18 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  * Despues de realizar la funcion y conseguir un resultado, valida lo que la variable 'usuario' contiene
                  */
-                //TODO Validar correctamente que si el usuario no es nulo dejarlo entrar, los mensajes de "No se encontro" o "Error en la base de dastos, se mostraran abajo" en el proceso
-                if(usuario == null) {
+                if(usuario != null) {
                     /**
                      * En el caso de no haber encontrado un usuario, se notifica la persona que lo intente otra vez y borrara lo que contenga la contrasena
                      */
-                    //TODO - Hacer que vacie ya sea Solo campo contrasena o tambien usuario cuando se equivocan
-                    //etContrasena.setText("");
-                    String texto = "Usuario o contraseña incorrectos";
-                    Toast mensaje = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_SHORT);
-                    mensaje.show();
-
-                } else {
                     mostrarSiguienteVista(usuario);
                 }//Fin de la validacion del usuario\
             }//Fin del metodo onClick
@@ -94,14 +86,15 @@ public class MainActivity extends AppCompatActivity {
                              */
                             usu=new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
                         } else {
-                            Toast.makeText(getApplicationContext(), "Datos incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
+                            etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
                         }
                     } catch (java.sql.SQLException e) {
-                        Toast.makeText(getApplicationContext(), "Datos incorrectos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Error en la conexion a la base de Datos", Toast.LENGTH_SHORT).show();
                     }
                     conn.close();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Error en la conexion", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No se ha podido conectar a la base de Datos", Toast.LENGTH_SHORT).show();
                 }//Fin de SI la conexion a la base de datos es diferente de nula
                 /**
                  * Retorna al usuario
