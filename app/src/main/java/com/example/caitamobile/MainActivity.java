@@ -89,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
                              */
                             usu=new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
                         } else {
-                            //TODO - Verificar si es posible poner un Toast mencionando posibles errores
+                            Toast.makeText(getApplicationContext(), "Datos incorrectos", Toast.LENGTH_SHORT).show();
                         }
                     } catch (java.sql.SQLException e) {
-                        //TODO - Verificar si es posible poner un Toast mencionando posibles errores
+                        Toast.makeText(getApplicationContext(), "Datos incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-                    //TODO - Verificar si es posible poner un Toast mencionando posibles errores
+                    Toast.makeText(getApplicationContext(), "Error en la conexion", Toast.LENGTH_SHORT).show();
                 }//Fin de SI la conexion a la base de datos es diferente de nula
                 /**
                  * Retorna al usuario
