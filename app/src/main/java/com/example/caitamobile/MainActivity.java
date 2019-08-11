@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     usuario = validarCuenta(etUsuario.getText().toString(), etContrasenia.getText().toString());
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Error en la conexion a la base de Datos", Toast.LENGTH_SHORT).show();
                 }
                 /**
                  * Despues de realizar la funcion y conseguir un resultado, valida lo que la variable 'usuario' contiene
@@ -71,27 +71,22 @@ public class MainActivity extends AppCompatActivity {
                 Usuario usu=null;
                 Connection conn = conexionMySQL.CONN();
                 if (conn!=null) {
-                    System.out.println("------Entro a la conexion");
                     String query = "select * from Usuario where Usuario=? and Contrasenia=?";
 
                     PreparedStatement ps = null;
-                    try {
-                        ps = conn.prepareStatement(query);
-                        ps.setString(1, usuario);
-                        ps.setString(2, contrasenia);
-                        ResultSet rs = ps.executeQuery();
-                        if (rs.next()) {
-                            /**
-                             * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
-                             */
-                            usu=new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
-                            etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
-                        }
-                    } catch (java.sql.SQLException e) {
-                        Toast.makeText(getApplicationContext(), "Error en la conexion a la base de Datos", Toast.LENGTH_SHORT).show();
-                    }
+                     ps = conn.prepareStatement(query);
+                     ps.setString(1, usuario);
+                     ps.setString(2, contrasenia);
+                     ResultSet rs = ps.executeQuery();
+                     if (rs.next()) {
+                         /**
+                          * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
+                          */
+                         usu=new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
+                     } else {
+                         Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
+                         etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
+                     }
                     conn.close();
                 } else {
                     Toast.makeText(getApplicationContext(), "No se ha podido conectar a la base de Datos", Toast.LENGTH_SHORT).show();
@@ -99,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  * Retorna al usuario
                  */
-                    return usu;//Retorna un objeto funcional
+                return usu;//Retorna un objeto funcional
             }//Fin de la funcion que valida el inicio de sesion
 
             private void mostrarSiguienteVista(Usuario usuario) {
