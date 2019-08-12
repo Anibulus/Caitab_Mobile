@@ -51,13 +51,13 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
          * Aqui se enlazan los componentes
          */
         nombre= (TextView) findViewById(R.id.textView12);
-        apellido= (TextView) findViewById(R.id.textView12);
-        correo= (TextView) findViewById(R.id.textView12);
-        telefono= (TextView) findViewById(R.id.textView12);
+        apellido= (TextView) findViewById(R.id.textView13);
+        correo= (TextView) findViewById(R.id.textView15);
+        telefono= (TextView) findViewById(R.id.textView14);
         fecha = (EditText) findViewById(R.id.editText2);
         hora=(EditText)findViewById(R.id.editText3);
-        btnSesion=(Button)findViewById(R.id.button2);
-        btnModificar=(Button)findViewById(R.id.btnDesc);
+        btnSesion=(Button)findViewById(R.id.btnDesc);
+        btnModificar=(Button)findViewById(R.id.button2);
         conexionMySQL=new  Conexion();
         /**
          * En este punto se llena de informacion los textView de los intentExtra
