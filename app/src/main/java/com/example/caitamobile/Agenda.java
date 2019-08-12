@@ -74,7 +74,6 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
          */
 
         try {
-            System.out.println("--------aqui estoy -----------");
             citas = consultarCitas();
         } catch (SQLException e) {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
@@ -190,7 +189,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                //TODO termiar la consulta para que sea completa segun los valores de las fechas
+                //TODO termniar la consulta para que sea completa segun los valores de las fechas
                 query="select * from citas between ? and ?";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
                 //Todo - las siguientes lineas estan inhabilitadas esperando a se termine con las fechas correctas
@@ -209,7 +208,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             System.out.println("----------Validacion de fechas");
             ResultSet rs=ps.executeQuery();
             System.out.println("--------------ejecuto la consulta");
-            while (rs.next()) {//TODO verificar qure el nombre de los campos sea el correcto
+            while (rs.next()) {
                 /**
                  * Crea un objeto cita llenandolo con todos los valores
                  * y poniendolos en el arraylist llenandolo independiente al

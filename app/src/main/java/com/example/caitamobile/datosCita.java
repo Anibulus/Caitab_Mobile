@@ -6,14 +6,20 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.caitamobile.Constantes.IntentExtras;
+import com.example.caitamobile.Constantes.ListaActividades;
 import com.example.caitamobile.modelo.Cita;
 import com.example.caitamobile.modelo.Paciente;
 import com.example.caitamobile.modelo.Usuario;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 public class datosCita extends AppCompatActivity implements View.OnClickListener {
@@ -22,36 +28,77 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
     private String desde;
     private Cita cita;
     private Paciente paciente;
-    private EditText fecha;
+    private TextView nombre, apellido, telefono, correo;
+    private EditText  hora,fecha;
+    private Button btnModificar, btnSesion;
     private int ano, mes, dia;
+    private Conexion conexionMySQL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_datos_cita);
         /**
-         * Aqui se enlazan los componentes con el intent pasado
+         * Aqui Se obtiene la informacion del activity pasado
          */
         Intent intent = getIntent();
-        usuario = intent.getParcelableExtra(IntentExtras.USUARIO.llave);
-        paciente = intent.getParcelableExtra(IntentExtras.PACIENTE.llave);
-        cita = intent.getParcelableExtra(IntentExtras.CITA.llave);
-        desde = intent.getStringExtra(IntentExtras.DESDE.llave);
+        usuario = intent.getParcelableExtra(IntentExtras.USUARIO.llave);//Objeto Usuario
+        paciente = intent.getParcelableExtra(IntentExtras.PACIENTE.llave);//Objeto Paciente
+        cita = intent.getParcelableExtra(IntentExtras.CITA.llave);//Objeto Cita
+        desde = intent.getStringExtra(IntentExtras.DESDE.llave);//De donde viene y a donde va
         /**
          * Aqui se enlazan los componentes
          */
-        fecha = findViewById(R.id.editText2);
-        //Todo Enlazar del de tiempo
+        nombre= (TextView) findViewById(R.id.textView12);
+        apellido= (TextView) findViewById(R.id.textView12);
+        correo= (TextView) findViewById(R.id.textView12);
+        telefono= (TextView) findViewById(R.id.textView12);
+        fecha = (EditText) findViewById(R.id.editText2);
+        hora=(EditText)findViewById(R.id.editText3);
+        btnSesion=(Button)findViewById(R.id.button2);
+        btnModificar=(Button)findViewById(R.id.btnDesc);
+        conexionMySQL=new  Conexion();
+        /**
+         * En este punto se llena de informacion los textView de los intentExtra
+         */
+        nombre.setText(cita.getNombre_paciente());
+        apellido.setText(cita.getApellidos_paciente());
+        telefono.setText(cita.getTelefono());
+        correo.setText(cita.getCorreo());
+        fecha.setText(cita.getFecha());
+        hora.setText("8:00");//Dato dummy
         /**
          * Escuchadores para  el pickDate
          */
         fecha.setOnClickListener(this);
+        hora.setOnClickListener(this);
         /**
          * Si el usuario es nulo, se le expulsara
          */
         if(usuario == null)
             expulsar();
+
+        /**
+         * Acciones que ejecutan los botones al momento de ser presionados
+         */
+        btnModificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO - Verificar si no hacen falta validaciones
+            }
+        });//Fin del boton de Modificar
+
+        btnSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO llevarlo a la siguiente ventana
+                Intent intent = new Intent(datosCita.this, Descripcion.class);
+                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                //TODO - Corregir la siguiente linea
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                startActivity(intent);
+            }
+        });//Fin del boton de sesion
     }//Fin del metodo OnCreate
 
     private void expulsar() {
@@ -80,7 +127,22 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             },ano,mes,dia);
             dpd.show();
         }
-
-        //TODO Agregar el pick de Tiempo
+        //TODO Agregar el pick de Tiempo y preguntar como separar la fecha de la hora
     }//Aqui termina el OnClick
+
+    private boolean modificarCita() throws SQLException {
+        boolean modificar=false;
+        Connection conn=conexionMySQL.CONN();
+        if(conn!=null){
+            //TODO - Hacer que en objeto cita contenga IDCIta para el update y modificar la consulta del activity agenda
+            String query="update cita set Fecha_Hora=? where ID_Cita=?";
+            PreparedStatement ps=conn.prepareCall(query);
+
+            conn.close();
+        }//Fin de validacion de conexion diferente de nulo
+        else{
+            //TODO Toast que indique que no se creo la conexion a la base
+        }
+        return modificar;
+    }//Fin de la funcion de modificar
 }//Aqui termina la clase
