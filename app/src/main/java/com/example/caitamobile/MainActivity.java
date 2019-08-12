@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 if(!usuario.equals("")&&!contrasenia.equals("")) {
                     Connection conn = conexionMySQL.CONN();
                     if (conn != null) {
-                        String query = "SELECT e.ID_Emp, u.Usuario, u.Contrasenia\n" +
-                                "FROM usuario u JOIN empleado e ON e.ID_Usu = u.ID_Usu" +
+                        String query = "SELECT e.ID_Emp, u.ID_Usu, u.Usuario, u.Contrasenia \n" +
+                                "FROM usuario u JOIN empleado e ON e.ID_Usu = u.ID_Usu " +
                                 "where Usuario=? and Contrasenia=?";
 
                         PreparedStatement ps = null;
