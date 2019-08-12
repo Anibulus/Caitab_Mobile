@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -66,6 +67,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         btnLimpiar = findViewById(R.id.btnLimpiar);
         lvCitas = findViewById(R.id.lvCitas);
         conexionMySQL=new Conexion();
+
+        etFechaInicio.setInputType(InputType.TYPE_NULL);
+        etFechaFinal.setInputType(InputType.TYPE_NULL);
 
         /**
          * Se llena el array list con una funcion que hace consulta a base de datos
