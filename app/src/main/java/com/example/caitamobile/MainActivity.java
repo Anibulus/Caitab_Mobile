@@ -1,7 +1,6 @@
 package com.example.caitamobile;
 
 import android.content.Intent;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.example.caitamobile.modelo.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,40 +45,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Usuario usuario = validarCuenta(etUsuario.getText().toString(), etContrasenia.getText().toString());
+                Usuario usuario = null;
+                try {
+                    usuario = validarCuenta(etUsuario.getText().toString(), etContrasenia.getText().toString());
+                } catch (SQLException e) {
+                    Toast.makeText(getApplicationContext(), "Error en la conexion a la base de Datos", Toast.LENGTH_SHORT).show();
+                }
                 /**
                  * Despues de realizar la funcion y conseguir un resultado, valida lo que la variable 'usuario' contiene
                  */
-
-                if(usuario == null) {
+                if(usuario != null) {
                     /**
                      * En el caso de no haber encontrado un usuario, se notifica la persona que lo intente otra vez y borrara lo que contenga la contrasena
                      */
-                    //etContrasena.setText("");
-                    String texto = "Usuario o contraseña incorrectos";
-                    Toast mensaje = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_SHORT);
-                    mensaje.show();
-
-                } else {
-
                     mostrarSiguienteVista(usuario);
-
                 }//Fin de la validacion del usuario\
             }//Fin del metodo onClick
 
-            private Usuario validarCuenta(String usuario, String contrasenia) {
+            private Usuario validarCuenta(String usuario, String contrasenia) throws SQLException {
                 /**
                  * Se crea un objeto usuario nulo al principio y se llenara en
                  * el caso de que el empleado se encuentre para coincidir
                  * donde se llama la funcion
                  */
                 Usuario usu=null;
-                Connection conn = conexionMySQL.CONN();
-                if (conn!=null) {
-                    String query = "select * from Usuario where Usuario=? and Contrasenia=?";
+                if(!usuario.equals("")&&!contrasenia.equals("")) {
+                    Connection conn = conexionMySQL.CONN();
+                    if (conn != null) {
+                        String query = "SELECT e.ID_Emp, u.ID_Usu, u.Usuario, u.Contrasenia \n" +
+                                "FROM usuario u JOIN empleado e ON e.ID_Usu = u.ID_Usu " +
+                                "where Usuario=? and Contrasenia=?";
 
-                    PreparedStatement ps = null;
-                    try {
+                        PreparedStatement ps = null;
                         ps = conn.prepareStatement(query);
                         ps.setString(1, usuario);
                         ps.setString(2, contrasenia);
@@ -86,22 +84,26 @@ public class MainActivity extends AppCompatActivity {
                         if (rs.next()) {
                             /**
                              * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
+                             * Y tambien se establece el empleado activo en la clase conexion
                              */
-                            usu=new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
+                            usu = new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
+                            conexionMySQL.setEmpleadoActivo(rs.getInt("ID_Emp"));
                         } else {
-                            Toast.makeText(getApplicationContext(), "Datos incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
+                            etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
                         }
-                    } catch (java.sql.SQLException e) {
-                        Toast.makeText(getApplicationContext(), "Datos incorrectos", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Error en la conexion", Toast.LENGTH_SHORT).show();
-                }//Fin de SI la conexion a la base de datos es diferente de nula
+                        conn.close();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No se ha podido conectar a la base de Datos", Toast.LENGTH_SHORT).show();
+                    }//Fin de SI la conexion a la base de datos es diferente de nula
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "No se permiten campos vacios", Toast.LENGTH_SHORT).show();
+                }
                 /**
                  * Retorna al usuario
                  */
-                    return usu;//Retorna un objeto funcional
+                return usu;//Retorna un objeto funcional
             }//Fin de la funcion que valida el inicio de sesion
 
             private void mostrarSiguienteVista(Usuario usuario) {

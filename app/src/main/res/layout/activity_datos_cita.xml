@@ -137,22 +137,22 @@
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="136dp"
-        android:layout_height="46dp"
+        android:layout_width="162dp"
+        android:layout_height="47dp"
         android:ems="10"
         android:hint="Fecha:"
         android:inputType="date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.196"
+        app:layout_constraintHorizontal_bias="0.113"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.591" />
+        app:layout_constraintVertical_bias="0.595" />
 
     <EditText
         android:id="@+id/editText3"
-        android:layout_width="138dp"
-        android:layout_height="50dp"
+        android:layout_width="148dp"
+        android:layout_height="45dp"
         android:ems="10"
         android:hint="Hora:"
         android:inputType="time"

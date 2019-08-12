@@ -9,5 +9,5 @@ public class Descripcion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_descripcion);
-    }
-}
+    }//Fin del metodo onCreate
+}//Fin de la clase
