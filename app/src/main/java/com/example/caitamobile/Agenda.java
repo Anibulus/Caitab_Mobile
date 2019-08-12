@@ -72,16 +72,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
          * ---Aqui se llena cuando se acaba de creearel activity, pero tambien se hace al pulsar un boton
          * Y son vacios para llenarlos en las dos ocasiones sin gastar regursos por tenerlos activos
          */
-
-        try {
-            citas = consultarCitas();
-        } catch (SQLException e) {
-            Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
-        }//Fin del tryCatch (Si hubo un problema al consultar)
-        if(citas!=null){
-            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
-            lvCitas.setAdapter(adaptador);
-        }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
+        llenarListView();
 
 
         /**
@@ -112,15 +103,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
                 if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                    try {
-                        citas = consultarCitas();
-                    } catch (SQLException e) {
-                        Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
-                    }//Fin del tryCatch (Si hubo un problema al consultar)
-                    if(citas!=null){
-                        adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
-                        lvCitas.setAdapter(adaptador);
-                    }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
+                    llenarListView();
                 }//Fin del if de fechas
                 else{
                     Toast.makeText(getApplicationContext(), "No se ha permitesn campos vacios", Toast.LENGTH_SHORT).show();
@@ -230,5 +213,16 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         startActivity(intent);
     }
 
+    private void llenarListView(){
+        try {
+            citas = consultarCitas();
+        } catch (SQLException e) {
+            Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
+        }//Fin del tryCatch (Si hubo un problema al consultar)
+        if(citas!=null){
+            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
+            lvCitas.setAdapter(adaptador);
+        }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
+    }
 
 }//Fin de la clase
