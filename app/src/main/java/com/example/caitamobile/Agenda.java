@@ -182,7 +182,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
     }//Fin del metodo onClick
 
     private ArrayList<Cita> consultarCitas() throws SQLException {
-        ArrayList<Cita> citas= new ArrayList<>();
+        ArrayList<Cita> citas= new ArrayList<Cita>();
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
             System.out.println("------- Tengo la conexion");
