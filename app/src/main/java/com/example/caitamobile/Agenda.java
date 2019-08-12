@@ -74,6 +74,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
          */
 
         try {
+            System.out.println("--------aqui estoy -----------");
             citas = consultarCitas();
         } catch (SQLException e) {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
@@ -98,8 +99,6 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  */
                 Intent intent = new Intent(Agenda.this, datosCita.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                //TODO incluir citas.get(position));
-                //Inhabilitado mientras se arregla esta parte del codigo
                 intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
                 startActivity(intent);
@@ -187,6 +186,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         ArrayList<Cita> citas= new ArrayList<>();
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
+            System.out.println("------- Tengo la conexion");
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
@@ -206,7 +206,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 ps=conn.prepareCall(query);
             }//Fin de la validacion que comprueba las fechas
 
+            System.out.println("----------Validacion de fechas");
             ResultSet rs=ps.executeQuery();
+            System.out.println("--------------ejecuto la consulta");
             while (rs.next()) {//TODO verificar qure el nombre de los campos sea el correcto
                 /**
                  * Crea un objeto cita llenandolo con todos los valores

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class Conexion{
     //Esta es la conexion de wichin
-    String ip = "10.29.234.198:3306";
+    String ip = "10.95.185.15:3306";
     String db = "caitab";
     String un = "caitab";
     String password = "1234";
