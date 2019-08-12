@@ -165,10 +165,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
     }//Fin del metodo onClick
 
     private ArrayList<Cita> consultarCitas() throws SQLException {
-        ArrayList<Cita> citas= new ArrayList<Cita>();
+        ArrayList<Cita> citas= new ArrayList<>();
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
-            System.out.println("------- Tengo la conexion");
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
@@ -176,11 +175,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 query="select * from citas between ? and ?";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
                 //Todo - las siguientes lineas estan inhabilitadas esperando a se termine con las fechas correctas
-                /*
-                ps.setString();
-                ps.setString();
-                */
-                ps.setInt(1, conexionMySQL.getEmpleadoActivo());
+                ps.setString(1,etFechaInicio.getText().toString());
+                ps.setString(2,etFechaFinal.getText().toString());
+                ps.setInt(3, conexionMySQL.getEmpleadoActivo());
             }else{
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli\n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=?";
