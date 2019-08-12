@@ -85,7 +85,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
 
 
         /**
-         * A partitr de AQUI estan los metodos que hacen acciones al ser presionados
+         * A partir de AQUI estan los metodos que hacen acciones al ser presionados
          */
         lvCitas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -100,7 +100,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
                 //TODO incluir citas.get(position));
                 //Inhabilitado mientras se arregla esta parte del codigo
-                //intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
+                intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
                 startActivity(intent);
             }
@@ -113,7 +113,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 /**
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
-                if(!etFechaInicio.equals("")&&!etFechaFinal.equals("")){
+                if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
                     try {
                         citas = consultarCitas();
                     } catch (SQLException e) {
@@ -189,7 +189,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         if(conn!=null){
             PreparedStatement ps;
             String query="";
-            if(!etFechaInicio.equals("")&&!etFechaFinal.equals("")){
+            if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
                 //TODO termiar la consulta para que sea completa segun los valores de las fechas
                 query="select * from citas between ? and ?";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
@@ -200,7 +200,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 ps.setInt();
                 */
             }else{
-                query="select * from citas";
+                //TODO - Hacer que la consulta sea especifica con el empleado ACTIVO
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli\n" +
+                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli";
                 ps=conn.prepareCall(query);
             }//Fin de la validacion que comprueba las fechas
 
@@ -210,7 +212,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  * Crea un objeto cita llenandolo con todos los valores
                  * y poniendolos en el arraylist llenandolo independiente al
                  */
-                Cita c=new Cita(rs.getInt("ID_Cli"),rs.getString("nombreCli"), rs.getString("apellidoCli"), rs.getString("telefonoCli"), rs.getString("correo"), rs.getString("fecha"), rs.getString("hora"));
+                Cita c=new Cita(rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), "8:00");
                 citas.add(c);
 
             }//Aqui termina el while
