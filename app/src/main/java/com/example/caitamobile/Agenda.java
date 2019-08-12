@@ -196,18 +196,17 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 /*
                 ps.setString();
                 ps.setString();
-                ps.setInt();
                 */
+                ps.setInt(1, conexionMySQL.getEmpleadoActivo());
             }else{
-                //TODO - Hacer que la consulta sea especifica con el empleado ACTIVO
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli\n" +
-                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli";
+                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=?";
                 ps=conn.prepareCall(query);
+                ps.setInt(1, conexionMySQL.getEmpleadoActivo());
             }//Fin de la validacion que comprueba las fechas
 
-            System.out.println("----------Validacion de fechas");
+
             ResultSet rs=ps.executeQuery();
-            System.out.println("--------------ejecuto la consulta");
             while (rs.next()) {
                 /**
                  * Crea un objeto cita llenandolo con todos los valores

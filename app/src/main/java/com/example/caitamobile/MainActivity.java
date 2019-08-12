@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                              * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
                              * Y tambien se establece el empleado activo en la clase conexion
                              */
-                            //TODO Guardar en la clase conexion el usuario activo en la aplicacion para futuras consultas
                             usu = new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
                             conexionMySQL.setEmpleadoActivo(rs.getInt("ID_Emp"));
                         } else {
