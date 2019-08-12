@@ -41,6 +41,8 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
     private int dia, mes, ano;
     private Conexion conexionMySQL;
 
+    ArrayList<Cita> citas=null;
+    ArrayAdapter adaptador=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,17 +70,16 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
          * Se llena el array list con una funcion que hace consulta a base de datos
          * y con el se llena la tabla que esta en el activity validando si consulto o no
          * ---Aqui se llena cuando se acaba de creearel activity, pero tambien se hace al pulsar un boton
+         * Y son vacios para llenarlos en las dos ocasiones sin gastar regursos por tenerlos activos
          */
-        ArrayList<Cita> citas=null;
+
         try {
             citas = consultarCitas();
         } catch (SQLException e) {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
         }//Fin del tryCatch (Si hubo un problema al consultar)
         if(citas!=null){
-            // TODO - SE NECESITA CREAR UN ADAPTER PERSONALIZADO PARA LOS OBJETOS QUE VA A MOSTRAR EL LIST VIEW
-            // AdapterPersonalizado adapterPersonalizado = new AdapterPersonalizado(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
-            ArrayAdapter adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
+            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
             lvCitas.setAdapter(adaptador);
         }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
 
@@ -113,7 +114,15 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
                 if(!etFechaInicio.equals("")&&!etFechaFinal.equals("")){
-                    // TODO - BUSCAR DATOS EN BASE A LA INFORMACIÓN PROPORCIONADA POR EL USUARIO
+                    try {
+                        citas = consultarCitas();
+                    } catch (SQLException e) {
+                        Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
+                    }//Fin del tryCatch (Si hubo un problema al consultar)
+                    if(citas!=null){
+                        adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
+                        lvCitas.setAdapter(adaptador);
+                    }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
                 }//Fin del if de fechas
                 else{
                     Toast.makeText(getApplicationContext(), "No se ha permitesn campos vacios", Toast.LENGTH_SHORT).show();
