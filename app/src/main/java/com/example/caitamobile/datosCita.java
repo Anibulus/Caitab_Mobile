@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.caitamobile.Constantes.IntentExtras;
 import com.example.caitamobile.Constantes.ListaActividades;
@@ -85,6 +86,15 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View view) {
                 //TODO - Verificar si no hacen falta validaciones
+                try {
+                    if(modificarCita()){
+                        Toast.makeText(getApplicationContext(), "De ha corregico correctamente", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (SQLException e) {
+                    Toast.makeText(getApplicationContext(), "Ocurrio un error mientras se modificaba", Toast.LENGTH_SHORT).show();
+                }
             }
         });//Fin del boton de Modificar
 
@@ -137,7 +147,11 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             //TODO - Hacer que en objeto cita contenga IDCIta para el update y modificar la consulta del activity agenda
             String query="update cita set Fecha_Hora=? where ID_Cita=?";
             PreparedStatement ps=conn.prepareCall(query);
-
+            ps.setString(1, fecha.getText().toString());//Nueva fecha
+            ps.setInt(2, cita.getIdCita());//Que cita es
+            if(ps.executeUpdate()>0){//Si se modifico el registro, es se c=modifico correctamente
+                modificar=true;
+            }
             conn.close();
         }//Fin de validacion de conexion diferente de nulo
         else{

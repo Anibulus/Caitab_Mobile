@@ -213,7 +213,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  * Crea un objeto cita llenandolo con todos los valores
                  * y poniendolos en el arraylist llenandolo independiente al
                  */
-                Cita c=new Cita(rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), "8:00");
+                Cita c=new Cita(rs.getInt("ID_Cita"),rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), "8:00");
                 citas.add(c);
 
             }//Aqui termina el while

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Cita implements Parcelable {
-
+    private int idCita;
     private int id_paciente;
     private String nombre_paciente;
     private String apellidos_paciente;
@@ -15,7 +15,8 @@ public class Cita implements Parcelable {
     private String fecha;
     private String hora;
 
-    public Cita(int id_paciente, String nombre_paciente, String apellidos_paciente, String telefono, String correo, String fecha, String hora) {
+    public Cita(int idCita,int id_paciente, String nombre_paciente, String apellidos_paciente, String telefono, String correo, String fecha, String hora) {
+        this.idCita=idCita;
         this.id_paciente = id_paciente;
         this.nombre_paciente = nombre_paciente;
         this.apellidos_paciente = apellidos_paciente;
@@ -27,6 +28,9 @@ public class Cita implements Parcelable {
 
     public String getDescripcion() {
         return nombre_paciente + " " + apellidos_paciente + " - " + fecha + ", " + hora;
+    }
+    public int getIdCita() {
+        return idCita;
     }
 
     public int getId_paciente() {
