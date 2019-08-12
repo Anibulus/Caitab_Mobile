@@ -41,4 +41,17 @@ public class Conexion{
         }
         return conn;
     }//Fin del metodo conexion
+
+    /**
+     * Este codigo es para obtener el empleado que esta activo en la aplicacion
+     * en el momento y se guarda aqui porque esta clase contiene la conexion para las funciones
+     * que requieren el empleado activo tambien
+     */
+    static int activo=0;
+    public int getEmpleadoActivo(){
+        return activo;
+    }
+    public void setEmpleadoActivo(int id){
+        activo=id;
+    }
 }//Fin de la clase conexion

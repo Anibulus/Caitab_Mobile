@@ -101,7 +101,6 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         btnSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO llevarlo a la siguiente ventana
                 Intent intent = new Intent(datosCita.this, Descripcion.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
                 //TODO - Corregir la siguiente linea
@@ -144,7 +143,6 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         boolean modificar=false;
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
-            //TODO - Hacer que en objeto cita contenga IDCIta para el update y modificar la consulta del activity agenda
             String query="update cita set Fecha_Hora=? where ID_Cita=?";
             PreparedStatement ps=conn.prepareCall(query);
             ps.setString(1, fecha.getText().toString());//Nueva fecha
@@ -155,7 +153,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             conn.close();
         }//Fin de validacion de conexion diferente de nulo
         else{
-            //TODO Toast que indique que no se creo la conexion a la base
+            Toast.makeText(getApplicationContext(), "No se ha podido conectar con la base de datos", Toast.LENGTH_SHORT).show();
         }
         return modificar;
     }//Fin de la funcion de modificar

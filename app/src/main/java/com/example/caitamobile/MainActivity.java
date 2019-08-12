@@ -72,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 if(!usuario.equals("")&&!contrasenia.equals("")) {
                     Connection conn = conexionMySQL.CONN();
                     if (conn != null) {
-                        String query = "select * from Usuario where Usuario=? and Contrasenia=?";
+                        String query = "SELECT e.ID_Emp, u.Usuario, u.Contrasenia\n" +
+                                "FROM usuario u JOIN empleado e ON e.ID_Usu = u.ID_Usu" +
+                                "where Usuario=? and Contrasenia=?";
 
                         PreparedStatement ps = null;
                         ps = conn.prepareStatement(query);
@@ -82,9 +84,11 @@ public class MainActivity extends AppCompatActivity {
                         if (rs.next()) {
                             /**
                              * Se llena el objeto USU cuando se encuentra lo que hace que permita llevarlo a la siguiente ventana
+                             * Y tambien se establece el empleado activo en la clase conexion
                              */
                             //TODO Guardar en la clase conexion el usuario activo en la aplicacion para futuras consultas
                             usu = new Usuario(rs.getInt("ID_Usu"), rs.getString("Usuario"), rs.getString("Contrasenia"));//id,usuario,contrasena
+                            conexionMySQL.setEmpleadoActivo(rs.getInt("ID_Emp"));
                         } else {
                             Toast.makeText(getApplicationContext(), "Usuario o Contrasena incorrectos", Toast.LENGTH_SHORT).show();
                             etContrasenia.setText("");//Se vacia el campo contrasena en caso de equivocarse
