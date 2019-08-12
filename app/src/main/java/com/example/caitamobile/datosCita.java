@@ -76,7 +76,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         correo.setText(cita.getCorreo());
         fecha.setText(cita.getFecha());
         hora.setText(String.valueOf(cita.getIdConsultorio()));
-        hora.setInputType(InputType.TYPE_NULL);
+        fecha.setInputType(InputType.TYPE_NULL);
         /**
          * Escuchadores para  el pickDate
          */
