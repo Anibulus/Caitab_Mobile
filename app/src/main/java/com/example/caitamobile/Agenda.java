@@ -18,6 +18,7 @@ import com.example.caitamobile.Constantes.ListaActividades;
 import com.example.caitamobile.modelo.Cita;
 import com.example.caitamobile.modelo.Usuario;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -91,6 +92,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
                 intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                intent.putExtra("idCita", citas.get(position).getIdCita());
                 startActivity(intent);
             }
         });//Fin de si pulta la lista
@@ -110,7 +112,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 }//Fin de la validacion de campos
             }
         });//Fin de si quiere  buscar citas por fecha
-
+        //TODO eliminar el metodo y boton porque no hace falta
         btnLimpiar.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -179,7 +181,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 ps.setString(2,etFechaFinal.getText().toString());
                 ps.setInt(3, conexionMySQL.getEmpleadoActivo());
             }else{
-                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli\n" +
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio FROM cliente cli\n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=?";
                 ps=conn.prepareCall(query);
                 ps.setInt(1, conexionMySQL.getEmpleadoActivo());
@@ -192,7 +194,8 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  * Crea un objeto cita llenandolo con todos los valores
                  * y poniendolos en el arraylist llenandolo independiente al
                  */
-                Cita c=new Cita(rs.getInt("ID_Cita"),rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), "8:00");
+                Cita c=new Cita(rs.getInt("ID_Cita"),rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), rs.getInt("Consultorio"));
+                System.out.println(rs.getInt("ID_Cita"));
                 citas.add(c);
 
             }//Aqui termina el while
@@ -217,7 +220,15 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
         }//Fin del tryCatch (Si hubo un problema al consultar)
         if(citas!=null){
-            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, citas);
+            /**
+             * El siguente siclo es para vaciar un array en otro y que sea visible la informacion
+             */
+            ArrayList<String> bonito=new ArrayList<>();
+            for (int i=0;i<citas.size();i++) {
+                bonito.add(citas.get(i).getDescripcion());
+            }
+            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, bonito);
+            System.out.println(citas.get(0).getIdCita());
             lvCitas.setAdapter(adaptador);
         }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
     }
