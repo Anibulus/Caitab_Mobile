@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Agenda extends AppCompatActivity implements View.OnClickListener {
 
@@ -91,7 +92,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  */
                 Intent intent = new Intent(Agenda.this, datosCita.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
+                if(citas.size()>0){
+                    intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
+                }
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
                 intent.putExtra("idCita", citas.get(position).getIdCita());
                 startActivity(intent);
@@ -105,9 +108,12 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 /**
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
-                llenarListView();
                 if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-
+                    if (validarFechas(etFechaInicio.getText().toString(),etFechaFinal.getText().toString())){
+                        llenarListView();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "La segunda fecha no sebe ser menor a la primera", Toast.LENGTH_SHORT).show();
+                    }
                 }//Fin del if de fechas
                 else{
                     Toast.makeText(getApplicationContext(), "No se ha permiten campos vacios", Toast.LENGTH_SHORT).show();
@@ -138,7 +144,15 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    etFechaFinal.setText(i+"/"+(i1+1)+"/"+i2);
+                    String dia=String.valueOf(i2);//dia
+                    String mes=String.valueOf(i1 + 1);//mes
+                    if(i2<10) {
+                        dia=String.valueOf("0"+i2);//dia
+                    }
+                    if(i1<10){
+                        mes=String.valueOf("0"+mes);//mes
+                    }
+                    etFechaFinal.setText(i + "/" + mes + "/" + dia);
                 }
             },ano,mes,dia);
             dpd.show();
@@ -151,8 +165,15 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    //etFechaInicio.setText(i2+"/"+(i1+1)+"/"+i);
-                    etFechaInicio.setText(i+"/"+(i1+1)+"/"+i2);
+                    String dia=String.valueOf(i2);//dia
+                    String mes=String.valueOf(i1 + 1);//mes
+                    if(i2<10) {
+                        dia=String.valueOf("0"+i2);//dia
+                    }
+                    if(i1<10){
+                        mes=String.valueOf("0"+mes);//mes
+                    }
+                    etFechaInicio.setText(i + "/" + mes + "/" + dia);
                 }
             },ano,mes,dia);
             dpd.show();
@@ -167,8 +188,8 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                String fechaInicio=etFechaInicio.getText().toString();
-                String fechaFin=etFechaFinal.getText().toString();
+                String fechaInicio=etFechaInicio.getText().toString()+" 00:00:00:0";
+                String fechaFin=etFechaFinal.getText().toString()+" 23:55:00:0";//Esto permite que se muestren las citas incluso de un solo dia
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora, c.Consultorio FROM cliente cli \n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? and c.Fecha_Hora BETWEEN ? AND ? ORDER BY c.Fecha_Hora ASC;";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
@@ -215,7 +236,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         } catch (SQLException e) {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
         }//Fin del tryCatch (Si hubo un problema al consultar)
-        if(citas!=null){
+        if(citas.size()>0){
             /**
              * El siguente siclo es para vaciar un array en otro y que sea visible la informacion
              */
@@ -225,9 +246,63 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             }
             adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, bonito);
             System.out.println(citas.get(0).getIdCita());
+            lvCitas.setEnabled(true);
             lvCitas.setAdapter(adaptador);
         }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
+        else{
+            ArrayList<String> bonito=new ArrayList<>();
+            bonito.add("No hay citas pendientes en estas fechas");
+            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, bonito);
+            lvCitas.setEnabled(false);
+            lvCitas.setAdapter(adaptador);
+        }
         adaptador=null;
     }
+
+    private boolean validarFechas(String fechaIni, String fechaFin){
+        boolean coincide=true;
+        /**
+         * las siguientes dos variables van a comparar en secciones ano mes y dia verificando que
+         * uno no sea menor a otro y comparandolos con un parseo a enteros
+         * y debido a que estan estandarizados, mantienen siempre ese formato y espacios siempre
+         */
+        String comparador,comparador2;
+        comparador=fechaIni.substring(0,4);
+        comparador2=fechaFin.substring(0,4);
+        System.out.println("-------Aqui"+comparador);
+        int fec,fec2;
+        fec=Integer.parseInt(comparador);//Fecha ini
+        fec2=Integer.parseInt(comparador2);//Fecha fin
+        if(fec>fec2){
+            /**
+             * Debido a que el ano de la primera fecha es mayor, no permite consultar
+             */
+            coincide=false;
+        }//Fin del comparador de anos
+        comparador=fechaIni.substring(5,7);
+        comparador2=fechaFin.substring(5,7);
+        fec=Integer.parseInt(comparador);//Fecha ini
+        fec2=Integer.parseInt(comparador2);//Fecha fin
+        System.out.println("-------Aqui"+comparador);
+        System.out.println(fechaIni);
+        if(fec>fec2){
+            /**
+             * Debido a que el mes de la primera fecha es mayor, no permite consultar
+             */
+            coincide=false;
+        }//Fin del comparador de meses
+        comparador=fechaIni.substring(8,10);
+        comparador2=fechaFin.substring(8,10);
+        fec=Integer.parseInt(comparador);//Fecha ini
+        fec2=Integer.parseInt(comparador2);//Fecha fin
+        if(fec>fec2){
+            /**
+             * Debido a que el dia de la primera fecha es mayor, no permite consultar
+             */
+            coincide=false;
+        }//Fin del comparador de dias
+        System.out.println("coincide es "+coincide);
+        return coincide;
+    }//Fin de validar fechas
 
 }//Fin de la clase

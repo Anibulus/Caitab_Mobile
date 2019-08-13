@@ -36,7 +36,6 @@ public class Descripcion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_descripcion);
-        //TODO - Traer los datos con un bundle (IDCita, IDCliente) (Empleado activo esta en conexion)
         //TODO - Poner los llave de usuario y metodo expulsar con el
         Intent inte=getIntent();
         usuario=inte.getParcelableExtra(IntentExtras.USUARIO.llave);
@@ -51,7 +50,6 @@ public class Descripcion extends AppCompatActivity {
         txtDescripcion=(EditText)findViewById(R.id.etDescripcionSesion);
         txtConclusion=(EditText)findViewById(R.id.txtConclusion);
         conexionMySQL=new Conexion();
-        txtDiagnostico.setInputType(InputType.TYPE_NULL);//Se inabilita el teclado para que la persona no pueda cambiarlo
         c=Calendar.getInstance();
         horaIni=String.valueOf(c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND));
         System.out.println("Aqui estoy "+horaIni);
@@ -87,7 +85,6 @@ public class Descripcion extends AppCompatActivity {
         boolean guardar=false;
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
-            //TODO agregar campor de hora inicio y hora fin
             String query="insert into expediente (ID_Emp,ID_Cli,ID_Cita,Hora_Inicio, Hora_Fin,Descripcion,Conclusion) values (?,?,?,?,?,?,?);";
             PreparedStatement ps=conn.prepareCall(query);
             ps.setInt(1,conexionMySQL.getEmpleadoActivo());
