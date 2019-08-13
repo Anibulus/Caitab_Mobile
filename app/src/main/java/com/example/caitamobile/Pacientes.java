@@ -31,6 +31,7 @@ public class Pacientes extends AppCompatActivity {
     private Button btnVerExpediente;
     private Conexion conexionMySQL;
     private Spinner spPacientes;
+    private ArrayList<Paciente> paciente;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +69,11 @@ public class Pacientes extends AppCompatActivity {
                  * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
                  *
                  */
-                Paciente paciente = (Paciente) spPacientes.getSelectedItem();
+                Paciente p = paciente.get(spPacientes.getSelectedItemPosition());
 
                 Intent intent = new Intent(Pacientes.this, DatosGenerales.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                intent.putExtra(IntentExtras.PACIENTE.llave, paciente);
+                intent.putExtra(IntentExtras.PACIENTE.llave, p);
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
                 startActivity(intent);
             }
@@ -86,13 +87,13 @@ public class Pacientes extends AppCompatActivity {
                  * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
                  *
                  */
-                Paciente paciente = (Paciente) spPacientes.getSelectedItem();
-
+                Paciente p = paciente.get(spPacientes.getSelectedItemPosition());
+                //TODO Redireccionar a un nuevo activity especifico para guardar una nueva cita
                 Intent intent = new Intent(Pacientes.this, datosCita.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                intent.putExtra(IntentExtras.PACIENTE.llave, paciente);
+                intent.putExtra(IntentExtras.PACIENTE.llave, p);
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
-                startActivity(intent);
+                //startActivity(intent);
             }
         });
 
@@ -104,11 +105,11 @@ public class Pacientes extends AppCompatActivity {
                  * SE PUEDEN AGREGAR MAS 'EXTRAS' CONFORME SEA NECESARIO
                  *
                  */
-                Paciente paciente = (Paciente) spPacientes.getSelectedItem();
+                Paciente p = paciente.get(spPacientes.getSelectedItemPosition());
 
                 Intent intent = new Intent(Pacientes.this, Expediente.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                intent.putExtra(IntentExtras.PACIENTE.llave, paciente);
+                intent.putExtra(IntentExtras.PACIENTE.llave, p);
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
                 startActivity(intent);
             }
@@ -121,14 +122,14 @@ public class Pacientes extends AppCompatActivity {
      * @throws SQLException
      */
     private ArrayList<Paciente> consultaPacientes() throws SQLException {
-        ArrayList<Paciente> paciente= new ArrayList<>();
+        paciente= new ArrayList<>();
         Connection conn = conexionMySQL.CONN();
         if (conn!=null) {
-            String query="select Nombre_C from cliente";
+            String query="select * from cliente";
             PreparedStatement ps =conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                Paciente p = new Paciente(rs.getString("Nombre_C"));
+                Paciente p = new Paciente(rs.getInt("ID_Cli"),rs.getString("Nombre_C"),rs.getString("Apellidos_C"),rs.getString("Tel_C"),rs.getString("Email_C"));
                 paciente.add(p);
             }
                 conn.close();
@@ -143,7 +144,11 @@ public class Pacientes extends AppCompatActivity {
         try {
             ArrayList<Paciente> paciente=consultaPacientes();
             if (paciente.size()>0) {
-                ArrayAdapter adaptor = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,paciente);
+                ArrayList<String> bonito=new ArrayList<>();
+                for(int i=0;i<paciente.size();i++){
+                    bonito.add(paciente.get(i).getApellidos()+" "+paciente.get(i).getNombre());
+                }
+                ArrayAdapter adaptor = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,bonito);
                 spPacientes.setAdapter(adaptor);
             }else {
 
