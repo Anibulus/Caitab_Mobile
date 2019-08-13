@@ -23,6 +23,7 @@ import com.example.caitamobile.modelo.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Clock;
 import java.util.Calendar;
@@ -98,6 +99,9 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
                 try {
                     if(modificarCita()){
                         Toast.makeText(getApplicationContext(), "Se ha corregido correctamente", Toast.LENGTH_SHORT).show();
+                        Intent regreso=new Intent(datosCita.this,Agenda.class);
+                        regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
+                        startActivity(regreso);
                     }else{
                         Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
                     }
@@ -112,6 +116,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             public void onClick(View view) {
                 Intent intent = new Intent(datosCita.this, Descripcion.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
                 intent.putExtra("idCita",idCita);
                 intent.putExtra("idCliente",cita.getId_paciente());
                 intent.putExtra("Cita",cita);
@@ -169,11 +174,18 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
                 @Override
                 public void onTimeSet(TimePicker timePicker, int i, int i1) {//horas, minutos
                     String fec=fecha.getText().toString();
-                    if(i1<10){
-                        String minutos="0"+String.valueOf(i1);
-                        fecha.setText(String.valueOf(fec+" "+i+":"+minutos));
-                    }else {
-                        fecha.setText(String.valueOf(fec + " " + i + ":" + i1));
+                    if(i>8&&i<21) {//Horario del lugar
+                        btnModificar.setEnabled(true);
+                        if (i1 < 10) {
+                            String minutos = "0" + String.valueOf(i1);
+                            fecha.setText(String.valueOf(fec + " " + i + ":" + minutos));
+                        } else {
+                            fecha.setText(String.valueOf(fec + " " + i + ":" + i1));
+                        }
+                    }//Fin del if para verificar la hora en la que se lleva a cabo la cita
+                    else{
+                        btnModificar.setEnabled(false);
+                        Toast.makeText(getApplicationContext(), "No se puede aceptar ese horario", Toast.LENGTH_SHORT).show();
                     }
                 }
             }, horas,minutos,false);//
@@ -182,7 +194,15 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    fecha.setText(i+"-"+(i1+1)+"-"+i2);
+                    String dia=String.valueOf(i2);//dia
+                    String mes=String.valueOf(i1 + 1);//mes
+                    if(i2<10) {
+                        mes=String.valueOf("0"+i2);//dia
+                    }
+                    if(i1<10){
+                        mes=String.valueOf("0"+mes);//mes
+                    }
+                    fecha.setText(i + "/" + mes + "/" + dia);
                 }
             },ano,mes,dia);
             dpd.show();
@@ -194,15 +214,25 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         boolean modificar=false;
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
-            String query="update cita set Fecha_Hora=?, Consultorio=? where ID_Cita=?";
+            String query="select * from cita where Fecha_Hora=? and Consultorio=?";
             PreparedStatement ps=conn.prepareCall(query);
-            ps.setString(1, fecha.getText().toString());//Nueva fecha
-            ps.setInt(2, Integer.parseInt(String.valueOf(hora.getText())));//Que consultorio
-            ps.setInt(3, idCita);//Que cita es
-            System.out.println(""+ fecha.getText().toString()+" "+Integer.parseInt(String.valueOf(hora.getText()))+" "+idCita);
-            if(ps.executeUpdate()>0){//Si se modifico el registro, es se c=modifico correctamente
-                modificar=true;
-            }
+            ps.setString(1,fecha.getText().toString());
+            ps.setInt(2,Integer.parseInt(hora.getText().toString()));
+            ResultSet rs=ps.executeQuery();
+            if(!rs.next()){//Si no encuentra registros se llevara la modificacion de la cita
+                query="update cita set Fecha_Hora=?, Consultorio=? where ID_Cita=?";
+                ps=conn.prepareCall(query);
+                ps.setString(1, fecha.getText().toString());//Nueva fecha
+                ps.setInt(2, Integer.parseInt(String.valueOf(hora.getText())));//Que consultorio
+                ps.setInt(3, idCita);//Que cita es
+                System.out.println(""+ fecha.getText().toString()+" "+Integer.parseInt(String.valueOf(hora.getText()))+" "+idCita);
+                if(ps.executeUpdate()>0){//Si se modifico el registro, es se c=modifico correctamente
+                    modificar=true;
+                }
+            }else{
+                Toast.makeText(getApplicationContext(), "Ya existe una cita en el mismo consultorio a esa hora", Toast.LENGTH_SHORT).show();
+            }//Fin del si encuentra mas citas iguales
+
             conn.close();
         }//Fin de validacion de conexion diferente de nulo
         else{
@@ -210,4 +240,8 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         }
         return modificar;
     }//Fin de la funcion de modificar
+
+    private boolean validarFechas(){
+        boolea
+    }
 }//Aqui termina la clase

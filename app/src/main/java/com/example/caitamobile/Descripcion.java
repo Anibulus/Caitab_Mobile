@@ -87,7 +87,6 @@ public class Descripcion extends AppCompatActivity {
         boolean guardar=false;
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
-            //TODO agregar campor de hora inicio y hora fin
             String query="insert into expediente (ID_Emp,ID_Cli,ID_Cita,Hora_Inicio, Hora_Fin,Descripcion,Conclusion) values (?,?,?,?,?,?,?);";
             PreparedStatement ps=conn.prepareCall(query);
             ps.setInt(1,conexionMySQL.getEmpleadoActivo());

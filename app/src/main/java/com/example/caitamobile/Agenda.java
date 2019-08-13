@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Agenda extends AppCompatActivity implements View.OnClickListener {
 
@@ -105,9 +106,12 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 /**
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
-                llenarListView();
                 if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-
+                    //if (){
+                        llenarListView();
+                    //}else{
+                    //    Toast.makeText(getApplicationContext(), "La segunda fecha no sebe ser menor a la primera", Toast.LENGTH_SHORT).show();
+                    //}
                 }//Fin del if de fechas
                 else{
                     Toast.makeText(getApplicationContext(), "No se ha permiten campos vacios", Toast.LENGTH_SHORT).show();
@@ -138,7 +142,15 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    etFechaFinal.setText(i+"/"+(i1+1)+"/"+i2);
+                    String dia=String.valueOf(i2);//dia
+                    String mes=String.valueOf(i1 + 1);//mes
+                    if(i2<10) {
+                        mes=String.valueOf("0"+i2);//dia
+                    }
+                    if(i1<10){
+                        mes=String.valueOf("0"+mes);//mes
+                    }
+                    etFechaFinal.setText(i + "/" + mes + "/" + dia);
                 }
             },ano,mes,dia);
             dpd.show();
@@ -151,8 +163,15 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    //etFechaInicio.setText(i2+"/"+(i1+1)+"/"+i);
-                    etFechaInicio.setText(i+"/"+(i1+1)+"/"+i2);
+                    String dia=String.valueOf(i2);//dia
+                    String mes=String.valueOf(i1 + 1);//mes
+                    if(i2<10) {
+                        mes=String.valueOf("0"+i2);//dia
+                    }
+                    if(i1<10){
+                        mes=String.valueOf("0"+mes);//mes
+                    }
+                    etFechaInicio.setText(i + "/" + mes + "/" + dia);
                 }
             },ano,mes,dia);
             dpd.show();
