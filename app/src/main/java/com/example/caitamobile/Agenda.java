@@ -178,7 +178,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 ps.setString(3,fechaFin);
             }else{
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio FROM cliente cli\n" +
-                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=?";
+                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? ORDER BY c.Fecha_Hora ASC;";
                 ps=conn.prepareCall(query);
                 ps.setInt(1, conexionMySQL.getEmpleadoActivo());
             }//Fin de la validacion que comprueba las fechas

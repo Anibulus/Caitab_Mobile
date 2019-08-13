@@ -110,6 +110,16 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         btnSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(datosCita.this, Descripcion.class);
+                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                intent.putExtra("idCita",idCita);
+                intent.putExtra("idCliente",cita.getId_paciente());
+                intent.putExtra("Cita",cita);
+                //TODO -
+                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                startActivity(intent);
+
+
                 if(cita.getFecha().equals(fecha.getText().toString())){
                     /**
                      * Si contienen lo mismo quiere decir que se permitira pasar al siguiewnte if, validando cuestiones de seguridad
@@ -123,11 +133,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
                     System.out.println(comparar);
                     //TODO Validar en el caso de que no haya camvbiado el registro y en el caso de que si
                     if(f.equals(comparar)){
-                        Intent intent = new Intent(datosCita.this, Descripcion.class);
-                        intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                        //TODO - Corregir la siguiente linea
-                        intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
-                        startActivity(intent);
+
                     }else{
                         Toast.makeText(getApplicationContext(), "La Sesion no es para el dia de Hoy", Toast.LENGTH_SHORT).show();
                     }
