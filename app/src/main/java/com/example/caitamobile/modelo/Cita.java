@@ -13,9 +13,9 @@ public class Cita implements Parcelable {
     private String correo;
 
     private String fecha;
-    private String hora;
+    private int idConsultorio;
 
-    public Cita(int idCita,int id_paciente, String nombre_paciente, String apellidos_paciente, String telefono, String correo, String fecha, String hora) {
+    public Cita(int idCita,int id_paciente, String nombre_paciente, String apellidos_paciente, String telefono, String correo, String fecha, int idConsultorio) {
         this.idCita=idCita;
         this.id_paciente = id_paciente;
         this.nombre_paciente = nombre_paciente;
@@ -23,11 +23,12 @@ public class Cita implements Parcelable {
         this.telefono = telefono;
         this.correo = correo;
         this.fecha = fecha;
-        this.hora = hora;
+        this.idConsultorio = idConsultorio;
     }
 
     public String getDescripcion() {
-        return nombre_paciente + " " + apellidos_paciente + " - " + fecha + ", " + hora;
+        fecha= (String) fecha.substring(0,16);
+        return nombre_paciente + " " + apellidos_paciente + "\n Dia: " + fecha + "\n Consultorio: " + idConsultorio;
     }
     public int getIdCita() {
         return idCita;
@@ -57,8 +58,8 @@ public class Cita implements Parcelable {
         return fecha;
     }
 
-    public String getHora() {
-        return hora;
+    public int getIdConsultorio() {
+        return idConsultorio;
     }
 
     protected Cita(Parcel in) {
@@ -68,7 +69,7 @@ public class Cita implements Parcelable {
         telefono = in.readString();
         correo = in.readString();
         fecha = in.readString();
-        hora = in.readString();
+        idConsultorio = in.readInt();
     }
 
     @Override
@@ -84,7 +85,7 @@ public class Cita implements Parcelable {
         dest.writeString(telefono);
         dest.writeString(correo);
         dest.writeString(fecha);
-        dest.writeString(hora);
+        dest.writeInt(idConsultorio);
     }
 
     @SuppressWarnings("unused")
