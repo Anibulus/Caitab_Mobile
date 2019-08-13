@@ -167,14 +167,13 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                //TODO Agregar mayor o igual
                 String fechaInicio=etFechaInicio.getText().toString();
                 String fechaFin=etFechaFinal.getText().toString();
-                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli \n" +
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora, c.Consultorio FROM cliente cli \n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? and c.Fecha_Hora BETWEEN ? AND ? ORDER BY c.Fecha_Hora ASC;";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
                 ps.setInt(1, conexionMySQL.getEmpleadoActivo());
-                System.out.println(fechaInicio +"  "+fechaFin);
+                System.out.println(conexionMySQL.getEmpleadoActivo()+" "+fechaInicio +"  "+fechaFin);
                 ps.setString(2,fechaInicio);
                 ps.setString(3,fechaFin);
             }else{
