@@ -107,11 +107,11 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
                 if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                    //if (){
+                    if (validarFechas(etFechaInicio.getText().toString(),etFechaFinal.getText().toString())){
                         llenarListView();
-                    //}else{
-                    //    Toast.makeText(getApplicationContext(), "La segunda fecha no sebe ser menor a la primera", Toast.LENGTH_SHORT).show();
-                    //}
+                    }else{
+                        Toast.makeText(getApplicationContext(), "La segunda fecha no sebe ser menor a la primera", Toast.LENGTH_SHORT).show();
+                    }
                 }//Fin del if de fechas
                 else{
                     Toast.makeText(getApplicationContext(), "No se ha permiten campos vacios", Toast.LENGTH_SHORT).show();
@@ -248,5 +248,50 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
         adaptador=null;
     }
+
+    private boolean validarFechas(String fechaIni, String fechaFin){
+        boolean coincide=true;
+        /**
+         * las siguientes dos variables van a comparar en secciones ano mes y dia verificando que
+         * uno no sea menor a otro y comparandolos con un parseo a enteros
+         * y debido a que estan estandarizados, mantienen siempre ese formato y espacios siempre
+         */
+        String comparador,comparador2;
+        comparador=fechaIni.substring(0,4);
+        comparador2=fechaFin.substring(0,4);
+        System.out.println("-------Aqui"+comparador);
+        int fec,fec2;
+        fec=Integer.parseInt(comparador);//Fecha ini
+        fec2=Integer.parseInt(comparador2);//Fecha fin
+        if(fec>fec2){
+            /**
+             * Debido a que el ano de la primera fecha es mayor, no permite consultar
+             */
+            coincide=false;
+        }//Fin del comparador de anos
+        comparador=fechaIni.substring(5,7);
+        comparador2=fechaFin.substring(5,7);
+        fec=Integer.parseInt(comparador);//Fecha ini
+        fec2=Integer.parseInt(comparador2);//Fecha fin
+        System.out.println("-------Aqui"+comparador);
+        System.out.println(fechaIni);
+        if(fec>fec2){
+            /**
+             * Debido a que el mes de la primera fecha es mayor, no permite consultar
+             */
+            coincide=false;
+        }//Fin del comparador de meses
+        comparador=fechaIni.substring(8,10);
+        comparador2=fechaFin.substring(8,10);
+        fec=Integer.parseInt(comparador);//Fecha ini
+        fec2=Integer.parseInt(comparador2);//Fecha fin
+        if(fec>fec2){
+            /**
+             * Debido a que el dia de la primera fecha es mayor, no permite consultar
+             */
+            coincide=false;
+        }//Fin del comparador de dias
+        return coincide;
+    }//Fin de validar fechas
 
 }//Fin de la clase

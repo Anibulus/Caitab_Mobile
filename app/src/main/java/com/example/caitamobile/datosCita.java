@@ -241,7 +241,9 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         return modificar;
     }//Fin de la funcion de modificar
 
+    //TODO terminar validacion
     private boolean validarFechas(){
-        boolea
-    }
+        boolean coincide=false;
+        return coincide;
+    }//Fin de validar fechas
 }//Aqui termina la clase
