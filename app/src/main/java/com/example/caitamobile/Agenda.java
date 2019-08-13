@@ -33,7 +33,6 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
     private EditText etFechaFinal;
 
     private Button btnBuscarFecha;
-    private Button btnLimpiar;
 
     private ListView lvCitas;
 
@@ -64,7 +63,6 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         etFechaInicio = findViewById(R.id.etFechaInicio);
         etFechaFinal = findViewById(R.id.etFechaFinal);
         btnBuscarFecha = findViewById(R.id.btnBuscarFecha);
-        btnLimpiar = findViewById(R.id.btnLimpiar);
         lvCitas = findViewById(R.id.lvCitas);
         conexionMySQL=new Conexion();
 
@@ -116,15 +114,6 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 }//Fin de la validacion de campos
             }
         });//Fin de si quiere  buscar citas por fecha
-        //TODO eliminar el metodo y boton porque no hace falta
-        btnLimpiar.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO - LIMPIAR TODOS LOS CAMPOS
-                // todo - Quitar el boton y hacerlo una funcion automatica al consultar
-            }
-        });
 
 
         /**
