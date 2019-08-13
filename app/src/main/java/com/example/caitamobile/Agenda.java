@@ -200,6 +200,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             }else{
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio FROM cliente cli\n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? ORDER BY c.Fecha_Hora ASC;";
+                //query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio \n" +
+                 //       "FROM cliente cli JOIN cita c ON c.ID_Cli = cli.ID_Cli\n" +
+                 //       "JOIN expediente e ON c.ID_Cita = e.ID_Cita WHERE NOT EXISTS (SELECT ID_Cita FROM expediente WHERE ID_Cita = '1')";
                 ps=conn.prepareCall(query);
                 ps.setInt(1, conexionMySQL.getEmpleadoActivo());
             }//Fin de la validacion que comprueba las fechas
