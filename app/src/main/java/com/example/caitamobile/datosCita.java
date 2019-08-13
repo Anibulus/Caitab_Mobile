@@ -117,37 +117,22 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         btnSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(datosCita.this, Descripcion.class);
-                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
-                intent.putExtra("idCita",idCita);
-                intent.putExtra("idCliente",cita.getId_paciente());
-                intent.putExtra("Cita",cita);
-                //TODO -
-                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
-                startActivity(intent);
-
-
-                if(cita.getFecha().equals(fecha.getText().toString())){
-                    /**
-                     * Si contienen lo mismo quiere decir que se permitira pasar al siguiewnte if, validando cuestiones de seguridad
-                     */
-                    //TODO validar que la sesion se lleve a cabo el mismo dia
-                    final Calendar c=Calendar.getInstance();
-                    int m=c.get(Calendar.MONTH)+1;
-                    String f=String.valueOf(c.get(Calendar.YEAR)+"-"+m+"-"+c.get(Calendar.DAY_OF_MONTH));//Consigue el dia de hoy
-                    System.out.println(f);
-                    String comparar=cita.getFecha().substring(0,9);
-                    System.out.println(comparar);
-                    //TODO Validar en el caso de que no haya camvbiado el registro y en el caso de que si
-                    if(f.equals(comparar)){
-
+                try {
+                    if(validarDiaDeSesion(idCita)) {
+                        Intent intent = new Intent(datosCita.this, Descripcion.class);
+                        intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                        intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                        intent.putExtra("idCita", idCita);
+                        intent.putExtra("idCliente", cita.getId_paciente());
+                        intent.putExtra("Cita", cita);
+                        //TODO -
+                        intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                        startActivity(intent);
                     }else{
-                        Toast.makeText(getApplicationContext(), "La Sesion no es para el dia de Hoy", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "La sesion no es para el dia de hoy", Toast.LENGTH_SHORT).show();
                     }
-                }//Fin del if
-                else{
-                    Toast.makeText(getApplicationContext(), "La Sesion no es para el dia de Hoy2", Toast.LENGTH_SHORT).show();
+                } catch (SQLException e) {
+                    Toast.makeText(getApplicationContext(), "Necesitas conexion con el servido para esta accion", Toast.LENGTH_SHORT).show();
                 }
             }
         });//Fin del boton de sesion
@@ -270,4 +255,43 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         System.out.println(coincide);
         return coincide;
     }//Fin de validar fechas
+
+    private boolean validarDiaDeSesion(int idCita) throws SQLException {
+        boolean sesion=false;
+        /**
+         * Este codigo valida la fecha del dispositivo con la fecha que esta asignada en la base de datos
+         * para llevar a cabo la sesion qque se guardara en el expediente
+         */
+        final Calendar c=Calendar.getInstance();
+        //Se crean variables locales
+        int dia=c.get(Calendar.DAY_OF_MONTH);
+        int mes=c.get(Calendar.MONTH)+1;
+        int ano=c.get(Calendar.YEAR);
+        String diaS=String.valueOf(dia);
+        String mesS=String.valueOf(mes);
+        if(dia<10){
+            diaS="0"+diaS;
+        }
+        if(mes<10){
+            mesS="0"+mes;
+        }
+        String fechaDisp=String.valueOf(ano+"-"+mesS+"-"+diaS);
+        Connection conn=conexionMySQL.CONN();
+        if(conn!=null){
+            PreparedStatement ps=conn.prepareCall("select Fecha_Hora from cita where ID_Cita=?");
+            ps.setInt(1,idCita);
+            ResultSet rs=ps.executeQuery();
+            if(rs.next()){
+                String fechaBD=rs.getString("Fecha_Hora");
+                System.out.println(fechaBD);
+                System.out.println(fechaDisp);
+                System.out.println(fechaBD.substring(0,10));
+                if(fechaDisp.equals(fechaBD.substring(0,10))){
+                    sesion=true;
+                }
+            }
+            conn.close();
+        }
+        return sesion;
+    }
 }//Aqui termina la clase
