@@ -79,7 +79,6 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
          */
         llenarListView();
 
-
         /**
          * A partir de AQUI estan los metodos que hacen acciones al ser presionados
          */
@@ -108,11 +107,12 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 /**
                  * Una vez se desee hacer una consulta manual, se necesitan llenar ambos campos de las fechas
                  */
+                llenarListView();
                 if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                    llenarListView();
+
                 }//Fin del if de fechas
                 else{
-                    Toast.makeText(getApplicationContext(), "No se ha permitesn campos vacios", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No se ha permiten campos vacios", Toast.LENGTH_SHORT).show();
                 }//Fin de la validacion de campos
             }
         });//Fin de si quiere  buscar citas por fecha
@@ -149,7 +149,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    etFechaFinal.setText(i2+"/"+(i1+1)+"/"+i);
+                    etFechaFinal.setText(i+"/"+(i1+1)+"/"+i2);
                 }
             },ano,mes,dia);
             dpd.show();
@@ -162,7 +162,8 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             DatePickerDialog dpd=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {//ano, mes y dia
-                    etFechaInicio.setText(i2+"/"+(i1+1)+"/"+i);
+                    //etFechaInicio.setText(i2+"/"+(i1+1)+"/"+i);
+                    etFechaInicio.setText(i+"/"+(i1+1)+"/"+i2);
                 }
             },ano,mes,dia);
             dpd.show();
@@ -177,13 +178,16 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                //TODO termniar la consulta para que sea completa segun los valores de las fechas
-                query="select * from citas between ? and ?";//Este es un ejemplo, no es la consulta real
+                //TODO Agregar mayor o igual
+                String fechaInicio=etFechaInicio.getText().toString();
+                String fechaFin=etFechaFinal.getText().toString();
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora FROM cliente cli \n" +
+                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? and c.Fecha_Hora BETWEEN ? AND ? ORDER BY c.Fecha_Hora ASC;";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
-                //Todo - las siguientes lineas estan inhabilitadas esperando a se termine con las fechas correctas
-                ps.setString(1,etFechaInicio.getText().toString());
-                ps.setString(2,etFechaFinal.getText().toString());
-                ps.setInt(3, conexionMySQL.getEmpleadoActivo());
+                ps.setInt(1, conexionMySQL.getEmpleadoActivo());
+                System.out.println(fechaInicio +"  "+fechaFin);
+                ps.setString(2,fechaInicio);
+                ps.setString(3,fechaFin);
             }else{
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio FROM cliente cli\n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=?";
@@ -196,7 +200,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             while (rs.next()) {
                 /**
                  * Crea un objeto cita llenandolo con todos los valores
-                 * y poniendolos en el arraylist llenandolo independiente al
+                 * y poniendolos en el arraylist llenandolo
                  */
                 Cita c=new Cita(rs.getInt("ID_Cita"),rs.getInt("ID_Cli"),rs.getString("Nombre_C"), rs.getString("Apellidos_C"), rs.getString("Tel_C"), rs.getString("Email_C"), rs.getString("Fecha_Hora"), rs.getInt("Consultorio"));
                 System.out.println(rs.getInt("ID_Cita"));
@@ -235,6 +239,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             System.out.println(citas.get(0).getIdCita());
             lvCitas.setAdapter(adaptador);
         }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
+        adaptador=null;
     }
 
 }//Fin de la clase

@@ -18,6 +18,9 @@ public class Paciente implements Parcelable {
         this.correo = correo;
     }
 
+    public Paciente(String nombre_c) {
+    }
+
     public int getId_paciente() {
         return id_paciente;
     }
@@ -58,7 +61,7 @@ public class Paciente implements Parcelable {
         this.correo = correo;
     }
 
-    protected Paciente(Parcel in) {
+    public Paciente(Parcel in) {
         id_paciente = in.readInt();
         nombre = in.readString();
         apellidos = in.readString();
