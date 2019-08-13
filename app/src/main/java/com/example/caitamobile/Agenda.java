@@ -92,7 +92,9 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                  */
                 Intent intent = new Intent(Agenda.this, datosCita.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
+                if(citas.size()>0){
+                    intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
+                }
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
                 intent.putExtra("idCita", citas.get(position).getIdCita());
                 startActivity(intent);
@@ -186,8 +188,8 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             PreparedStatement ps;
             String query="";
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
-                String fechaInicio=etFechaInicio.getText().toString();
-                String fechaFin=etFechaFinal.getText().toString();
+                String fechaInicio=etFechaInicio.getText().toString()+" 00:00:00:0";
+                String fechaFin=etFechaFinal.getText().toString()+" 23:55:00:0";//Esto permite que se muestren las citas incluso de un solo dia
                 query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora, c.Consultorio FROM cliente cli \n" +
                         "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? and c.Fecha_Hora BETWEEN ? AND ? ORDER BY c.Fecha_Hora ASC;";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
@@ -234,7 +236,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
         } catch (SQLException e) {
             Toast.makeText(getApplicationContext(), "Ocurrio un error al consultar en la base de datos", Toast.LENGTH_SHORT).show();
         }//Fin del tryCatch (Si hubo un problema al consultar)
-        if(citas!=null){
+        if(citas.size()>0){
             /**
              * El siguente siclo es para vaciar un array en otro y que sea visible la informacion
              */
@@ -244,8 +246,16 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             }
             adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, bonito);
             System.out.println(citas.get(0).getIdCita());
+            lvCitas.setEnabled(true);
             lvCitas.setAdapter(adaptador);
         }//Fin del Si citas es nulo (Si no hubo conexion o no hay registros)
+        else{
+            ArrayList<String> bonito=new ArrayList<>();
+            bonito.add("No hay citas pendientes en estas fechas");
+            adaptador = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, bonito);
+            lvCitas.setEnabled(false);
+            lvCitas.setAdapter(adaptador);
+        }
         adaptador=null;
     }
 
@@ -291,6 +301,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
              */
             coincide=false;
         }//Fin del comparador de dias
+        System.out.println("coincide es "+coincide);
         return coincide;
     }//Fin de validar fechas
 
