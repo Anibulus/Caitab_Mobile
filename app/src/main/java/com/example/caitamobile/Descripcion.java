@@ -16,6 +16,7 @@ import com.example.caitamobile.modelo.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 public class Descripcion extends AppCompatActivity {
     private Button btnGuardarSesion;
@@ -25,6 +26,11 @@ public class Descripcion extends AppCompatActivity {
     private Cita cita;
     private int idCita;
     private int idCliente;
+    private Calendar c;
+    private String horaIni, horaFin;
+
+    public Descripcion() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +52,20 @@ public class Descripcion extends AppCompatActivity {
         txtConclusion=(EditText)findViewById(R.id.txtConclusion);
         conexionMySQL=new Conexion();
         txtDiagnostico.setInputType(InputType.TYPE_NULL);//Se inabilita el teclado para que la persona no pueda cambiarlo
+        c=Calendar.getInstance();
+        horaIni=String.valueOf(c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND));
+        System.out.println("Aqui estoy "+horaIni);
         /**
          * Acciones
          */
         btnGuardarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /**
+                 * Al momento de presionar el boton terminaste la sesion y se toma como hora fin
+                 */
+                c=Calendar.getInstance();
+                horaFin=String.valueOf(c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND));
                 try {
                     if(guardarSesion())
                     {
@@ -74,13 +88,15 @@ public class Descripcion extends AppCompatActivity {
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
             //TODO agregar campor de hora inicio y hora fin
-            String query="insert into expediente (ID_Emp,ID_Cli,ID_Cita,Descripcion,Conclusion) values (?,?,?,?,?);";
+            String query="insert into expediente (ID_Emp,ID_Cli,ID_Cita,Hora_Inicio, Hora_Fin,Descripcion,Conclusion) values (?,?,?,?,?,?,?);";
             PreparedStatement ps=conn.prepareCall(query);
             ps.setInt(1,conexionMySQL.getEmpleadoActivo());
             ps.setInt(2,idCliente);
             ps.setInt(3,idCita);
-            ps.setString(4,txtDescripcion.getText().toString());
-            ps.setString(5,txtConclusion.getText().toString());
+            ps.setString(4,horaIni);
+            ps.setString(5,horaFin);
+            ps.setString(6,txtDescripcion.getText().toString());
+            ps.setString(7,txtConclusion.getText().toString());
             if(ps.executeUpdate()>0){
                 guardar=true;
             }
