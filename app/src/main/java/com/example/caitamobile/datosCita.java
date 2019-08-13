@@ -197,7 +197,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
                     String dia=String.valueOf(i2);//dia
                     String mes=String.valueOf(i1 + 1);//mes
                     if(i2<10) {
-                        mes=String.valueOf("0"+i2);//dia
+                        dia=String.valueOf("0"+i2);//dia
                     }
                     if(i1<10){
                         mes=String.valueOf("0"+mes);//mes
@@ -207,7 +207,6 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             },ano,mes,dia);
             dpd.show();
         }//Fin de si seleccionan la fecha
-        //TODO Agregar el pick de Tiempo y preguntar como separar la fecha de la hora
     }//Aqui termina el OnClick
 
     private boolean modificarCita() throws SQLException {
