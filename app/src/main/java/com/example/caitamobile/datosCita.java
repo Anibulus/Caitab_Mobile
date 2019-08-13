@@ -95,18 +95,21 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         btnModificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO - Verificar si no hacen falta validaciones
-                try {
-                    if(modificarCita()){
-                        Toast.makeText(getApplicationContext(), "Se ha corregido correctamente", Toast.LENGTH_SHORT).show();
-                        Intent regreso=new Intent(datosCita.this,Agenda.class);
-                        regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
-                        startActivity(regreso);
-                    }else{
-                        Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
+                if(validarFechas(fecha.getText().toString())) {
+                    try {
+                        if (modificarCita()) {
+                            Toast.makeText(getApplicationContext(), "Se ha corregido correctamente", Toast.LENGTH_SHORT).show();
+                            Intent regreso = new Intent(datosCita.this, Agenda.class);
+                            regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
+                            startActivity(regreso);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (SQLException e) {
+                        Toast.makeText(getApplicationContext(), "Ocurrio un error mientras se modificaba", Toast.LENGTH_SHORT).show();
                     }
-                } catch (SQLException e) {
-                    Toast.makeText(getApplicationContext(), "Ocurrio un error mientras se modificaba", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "No puedes guardar una fecha antes de hoy", Toast.LENGTH_SHORT).show();
                 }
             }
         });//Fin del boton de Modificar
@@ -167,7 +170,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
             dia=c.get(Calendar.DAY_OF_MONTH);
             mes=c.get(Calendar.MONTH);
             ano=c.get(Calendar.YEAR);
-            horas=c.get(Calendar.HOUR);
+            horas=c.get(Calendar.HOUR_OF_DAY);
             minutos=c.get(Calendar.MINUTE);
 
             TimePickerDialog tpd=new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -241,8 +244,30 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
     }//Fin de la funcion de modificar
 
     //TODO terminar validacion
-    private boolean validarFechas(){
-        boolean coincide=false;
+    private boolean validarFechas(String fecha){
+        boolean coincide=true;
+        /**
+         * Las siguientes lineas de codigo compararan la fecha que se quiere guardar antes de hacer el procedimiento
+         * y evitar que se guarden fechas antes al dia que transcurre
+         */
+        int anoF=Integer.parseInt(fecha.substring(0,4));
+        int mesF=Integer.parseInt(fecha.substring(5,7));
+        int diaF=Integer.parseInt(fecha.substring(8,10));
+        final Calendar c= Calendar.getInstance();
+        dia=c.get(Calendar.DAY_OF_MONTH);
+        mes=c.get(Calendar.MONTH)+1;
+        ano=c.get(Calendar.YEAR);
+        System.out.println(diaF+" "+dia);
+        if(dia>diaF){
+            coincide=false;
+        }System.out.println(coincide);
+        if(mes>mesF){
+            coincide=false;
+        }System.out.println(coincide);
+        if(ano>anoF){
+            coincide=false;
+        }
+        System.out.println(coincide);
         return coincide;
     }//Fin de validar fechas
 }//Aqui termina la clase
