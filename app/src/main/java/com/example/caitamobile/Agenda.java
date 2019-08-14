@@ -201,11 +201,10 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                 ps.setString(2,fechaInicio);
                 ps.setString(3,fechaFin);
             }else{
-                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio FROM cliente cli\n" +
-                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? ORDER BY c.Fecha_Hora ASC;";
-                //query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio \n" +
-                 //       "FROM cliente cli JOIN cita c ON c.ID_Cli = cli.ID_Cli\n" +
-                 //       "JOIN expediente e ON c.ID_Cita = e.ID_Cita WHERE NOT EXISTS (SELECT ID_Cita FROM expediente WHERE ID_Cita = '1')";
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio \n" +
+                        "FROM cita c JOIN cliente cli  ON c.ID_Cli = cli.ID_Cli \n" +
+                        "WHERE c.ID_Cita NOT IN (SELECT ID_Cita FROM expediente) AND ID_Emp=? \n" +
+                        "ORDER BY c.Fecha_Hora ASC";
                 ps=conn.prepareCall(query);
                 ps.setInt(1, conexionMySQL.getEmpleadoActivo());
             }//Fin de la validacion que comprueba las fechas
