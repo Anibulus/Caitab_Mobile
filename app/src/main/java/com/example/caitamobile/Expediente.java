@@ -67,10 +67,13 @@ public class Expediente extends AppCompatActivity {
         Connection conn=conexionMySQL.CONN();
         if(conn!=null){
             System.out.println("llego aqui");
-            String query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio FROM cliente cli\n" +
-                    "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? ORDER BY c.Fecha_Hora ASC;";
+            String query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio \n" +
+                    "FROM cita c JOIN cliente cli  ON c.ID_Cli = cli.ID_Cli \n" +
+                    "WHERE c.ID_Cita IN (SELECT ID_Cita FROM expediente) AND c.ID_Cli=? AND c.ID_Emp =? \n" +
+                    "and c.Fecha_Hora  ORDER BY c.Fecha_Hora DESC";
             PreparedStatement ps=conn.prepareCall(query);
-            ps.setInt(1,conexionMySQL.getEmpleadoActivo());
+            ps.setInt(1, paciente.getId_paciente());
+            ps.setInt(2,conexionMySQL.getEmpleadoActivo());
             //ps.setInt(2,paciente.getID));
             ResultSet rs=ps.executeQuery();
             while (rs.next()){

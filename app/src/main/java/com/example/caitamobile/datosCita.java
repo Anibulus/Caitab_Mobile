@@ -45,97 +45,162 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_datos_cita);
-        /**
-         * Aqui Se obtiene la informacion del activity pasado
-         */
-        Intent intent = getIntent();
-        usuario = intent.getParcelableExtra(IntentExtras.USUARIO.llave);//Objeto Usuario
-        paciente = intent.getParcelableExtra(IntentExtras.PACIENTE.llave);//Objeto Paciente
-        cita = intent.getParcelableExtra(IntentExtras.CITA.llave);//Objeto Cita
-        System.out.println(cita.getIdCita()+"Soy getCita");
-        desde = intent.getStringExtra(IntentExtras.DESDE.llave);//De donde viene y a donde va
-        Bundle b=getIntent().getExtras();
-        idCita=b.getInt("idCita");
+
         /**
          * Aqui se enlazan los componentes
          */
-        nombre= (TextView) findViewById(R.id.textView12);
-        apellido= (TextView) findViewById(R.id.textView13);
-        correo= (TextView) findViewById(R.id.textView15);
-        telefono= (TextView) findViewById(R.id.textView14);
+        nombre = (TextView) findViewById(R.id.textView12);
+        apellido = (TextView) findViewById(R.id.textView13);
+        correo = (TextView) findViewById(R.id.textView15);
+        telefono = (TextView) findViewById(R.id.textView14);
         fecha = (EditText) findViewById(R.id.editText2);
-        hora=(EditText)findViewById(R.id.editText3);//Ahora consultorio
-        btnSesion=(Button)findViewById(R.id.btnDesc);
-        btnModificar=(Button)findViewById(R.id.button2);
-        conexionMySQL=new  Conexion();
-        /**
-         * En este punto se llena de informacion los textView de los intentExtra
-         */
-        nombre.setText(cita.getNombre_paciente());
-        apellido.setText(cita.getApellidos_paciente());
-        telefono.setText(cita.getTelefono());
-        correo.setText(cita.getCorreo());
-        fecha.setText(cita.getFecha());
-        hora.setText(String.valueOf(cita.getIdConsultorio()));
+        hora = (EditText) findViewById(R.id.editText3);//Ahora consultorio
+        btnSesion = (Button) findViewById(R.id.btnDesc);
+        btnModificar = (Button) findViewById(R.id.button2);
         fecha.setInputType(InputType.TYPE_NULL);
+        conexionMySQL = new Conexion();
         /**
          * Escuchadores para  el pickDate
          */
         fecha.setOnClickListener(this);
         hora.setOnClickListener(this);
-        /**
-         * Si el usuario es nulo, se le expulsara
-         */
-        if(usuario == null)
-            expulsar();
 
+        Bundle b=getIntent().getExtras();
+        String anterior=b.getString("anterior");
+        System.out.println("------Aqui estoy"+anterior);
         /**
-         * Acciones que ejecutan los botones al momento de ser presionados
+         *El siguiente codigo es cuando se proviene de agenda para poder reutilizar el codigo
          */
-        btnModificar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(validarFechas(fecha.getText().toString())) {
-                    try {
-                        if (modificarCita()) {
-                            Toast.makeText(getApplicationContext(), "Se ha corregido correctamente", Toast.LENGTH_SHORT).show();
-                            Intent regreso = new Intent(datosCita.this, Agenda.class);
-                            regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
-                            startActivity(regreso);
+        if(anterior.equals("Agenda")) {
+            /**
+             * Aqui Se obtiene la informacion del activity pasado
+             */
+            Intent intent = getIntent();
+            usuario = intent.getParcelableExtra(IntentExtras.USUARIO.llave);//Objeto Usuario
+            paciente = intent.getParcelableExtra(IntentExtras.PACIENTE.llave);//Objeto Paciente
+            cita = intent.getParcelableExtra(IntentExtras.CITA.llave);//Objeto Cita
+            System.out.println(cita.getIdCita() + "Soy getCita");
+            desde = intent.getStringExtra(IntentExtras.DESDE.llave);//De donde viene y a donde va
+            b = getIntent().getExtras();
+            idCita = b.getInt("idCita");
+             /**
+             * En este punto se llena de informacion los textView de los intentExtra
+             */
+            nombre.setText(cita.getNombre_paciente());
+            apellido.setText(cita.getApellidos_paciente());
+            telefono.setText(cita.getTelefono());
+            correo.setText(cita.getCorreo());
+            fecha.setText(cita.getFecha());
+            //TODO - hacer que consultorio sea un spinner y se llene solo con los numeros del 1 al 6
+            hora.setText(String.valueOf(cita.getIdConsultorio()));
+
+            /**
+             * Si el usuario es nulo, se le expulsara
+             */
+            if (usuario == null)
+                expulsar();
+
+            /**
+             * Acciones que ejecutan los botones al momento de ser presionados
+             */
+            btnModificar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!fecha.getText().toString().equals("")&&!hora.getText().toString().equals("")) {
+                        if (validarFechas(fecha.getText().toString())) {
+                            try {
+                                if (modificarCita()) {
+                                    Toast.makeText(getApplicationContext(), "Se ha corregido correctamente", Toast.LENGTH_SHORT).show();
+                                    Intent regreso = new Intent(datosCita.this, Agenda.class);
+                                    regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
+                                    startActivity(regreso);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (SQLException e) {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un error mientras se modificaba", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "No puedes guardar una fecha antes de hoy", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (SQLException e) {
-                        Toast.makeText(getApplicationContext(), "Ocurrio un error mientras se modificaba", Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(), "No puedes guardar una fecha antes de hoy", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });//Fin del boton de Modificar
-
-        btnSesion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if(validarDiaDeSesion(idCita)) {
-                        Intent intent = new Intent(datosCita.this, Descripcion.class);
-                        intent.putExtra(IntentExtras.USUARIO.llave, usuario);
-                        intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
-                        intent.putExtra("idCita", idCita);
-                        intent.putExtra("idCliente", cita.getId_paciente());
-                        intent.putExtra("Cita", cita);
-                        //TODO -
-                        intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
-                        startActivity(intent);
                     }else{
-                        Toast.makeText(getApplicationContext(), "La sesion no es para el dia de hoy", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "No pueden haber campos vacios", Toast.LENGTH_SHORT).show();
                     }
-                } catch (SQLException e) {
-                    Toast.makeText(getApplicationContext(), "Necesitas conexion con el servido para esta accion", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });//Fin del boton de sesion
+            });//Fin del boton de Modificar
+
+            btnSesion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(validarFechas(fecha.getText().toString())) {
+                        try {
+                            if (validarDiaDeSesion(idCita)) {
+                                Intent intent = new Intent(datosCita.this, Descripcion.class);
+                                intent.putExtra(IntentExtras.USUARIO.llave, usuario);
+                                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                                intent.putExtra("idCita", idCita);
+                                intent.putExtra("idCliente", cita.getId_paciente());
+                                intent.putExtra("Cita", cita);
+                                intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "La sesion no es para el dia de hoy", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (SQLException e) {
+                            Toast.makeText(getApplicationContext(), "Necesitas conexion con el servido para esta accion", Toast.LENGTH_SHORT).show();
+                        }
+                    }//Fin de validacion de fechas
+                    else{
+                        Toast.makeText(getApplicationContext(), "No se puede guardar una fecha anterior a el dia de hoy", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });//Fin del boton de sesion
+        }//Fin de SI PROVIENE DE AGENDA
+        else{
+            /**
+             * El siguiente codigo es en el caso de que provenga de el activity paciente para
+             */
+            Intent intent = getIntent();
+            usuario = intent.getParcelableExtra(IntentExtras.USUARIO.llave);
+            paciente = intent.getParcelableExtra(IntentExtras.PACIENTE.llave);
+            /**
+             * Aqui se llenan los textView
+             */
+            nombre.setText(paciente.getNombre());
+            apellido.setText(paciente.getApellidos());
+            telefono.setText(paciente.getTelefono());
+            correo.setText(paciente.getCorreo());
+            /**
+             * Aqui surgen las modificaciones de de los activitys
+             */
+            hora.setHint("Consultorio:");
+            btnSesion.setVisibility(View.INVISIBLE);
+            btnModificar.setText("Guardar Cita");
+            btnModificar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO validar que no se envoen campos vacios
+                    if(!fecha.getText().toString().equals("")&&!hora.getText().toString().equals("")){
+                        if (validarFechas(fecha.getText().toString())) {
+                            try {
+                                System.out.println("----------Enttro al boton");
+                                if (guardarNuevaCita(paciente.getId_paciente(), conexionMySQL.getEmpleadoActivo(), fecha.getText().toString(), Integer.parseInt(hora.getText().toString()))) {
+                                    Toast.makeText(getApplicationContext(), "Se ha guardado correctamente", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No se ha podido guardar", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (SQLException e) {
+                                Toast.makeText(getApplicationContext(), "Necesitas conexion con el servido para esta accion", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(), "No puedes guardar una fecha antes al dia de hoy", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No pueden haber campos vacios", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });//Fin de la accion del unico boton
+        }//FIN DE IF-ELSE QUE VALIDA QUE CODIGO EJECITAR EN EL ONCREATE
     }//Fin del metodo OnCreate
 
     private void expulsar() {
@@ -228,7 +293,24 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
         return modificar;
     }//Fin de la funcion de modificar
 
-    //TODO terminar validacion
+    private boolean guardarNuevaCita(int idPaciente, int idEmpleado, String fecha, int consultorio) throws SQLException {
+        boolean guardar=false;
+        Connection conn=conexionMySQL.CONN();
+        if(conn!=null){
+            String query="INSERT INTO cita (ID_Emp,ID_Cli,Fecha_Hora,Consultorio) VALUES (?,?,?,?)";
+            PreparedStatement ps=conn.prepareCall(query);
+            ps.setInt(1,idEmpleado);
+            ps.setInt(2,idPaciente);
+            ps.setString(3,fecha);
+            ps.setInt(4, consultorio);
+            if(ps.executeUpdate()>0){
+                guardar=true;
+            }
+            conn.close();
+        }
+        return guardar;
+    }//Fin de la funcion de guardar
+
     private boolean validarFechas(String fecha){
         boolean coincide=true;
         /**

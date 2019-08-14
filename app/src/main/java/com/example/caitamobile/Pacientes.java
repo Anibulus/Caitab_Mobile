@@ -92,8 +92,9 @@ public class Pacientes extends AppCompatActivity {
                 Intent intent = new Intent(Pacientes.this, datosCita.class);
                 intent.putExtra(IntentExtras.USUARIO.llave, usuario);
                 intent.putExtra(IntentExtras.PACIENTE.llave, p);
+                intent.putExtra("anterior", "Expediente");
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.PACIENTES.nombre);
-                //startActivity(intent);
+                startActivity(intent);
             }
         });
 
@@ -125,8 +126,10 @@ public class Pacientes extends AppCompatActivity {
         paciente= new ArrayList<>();
         Connection conn = conexionMySQL.CONN();
         if (conn!=null) {
-            String query="select * from cliente";
+            String query="SELECT DISTINCT c.ID_Cli,c.Nombre_C,c.Apellidos_C,c.Tel_C,c.Email_C FROM cliente c JOIN cita ci ON ci.ID_Cli = c.ID_Cli \n" +
+                    "WHERE ID_Emp = ?";
             PreparedStatement ps =conn.prepareStatement(query);
+            ps.setInt(1,conexionMySQL.getEmpleadoActivo());
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Paciente p = new Paciente(rs.getInt("ID_Cli"),rs.getString("Nombre_C"),rs.getString("Apellidos_C"),rs.getString("Tel_C"),rs.getString("Email_C"));

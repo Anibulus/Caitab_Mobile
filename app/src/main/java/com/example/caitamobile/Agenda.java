@@ -96,6 +96,7 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
                     intent.putExtra(IntentExtras.CITA.llave, citas.get(position));
                 }
                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
+                intent.putExtra("anterior", "Agenda");
                 intent.putExtra("idCita", citas.get(position).getIdCita());
                 startActivity(intent);
             }
@@ -190,8 +191,10 @@ public class Agenda extends AppCompatActivity implements View.OnClickListener {
             if(!etFechaInicio.getText().toString().equals("")&&!etFechaFinal.getText().toString().equals("")){
                 String fechaInicio=etFechaInicio.getText().toString()+" 00:00:00:0";
                 String fechaFin=etFechaFinal.getText().toString()+" 23:55:00:0";//Esto permite que se muestren las citas incluso de un solo dia
-                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora, c.Consultorio FROM cliente cli \n" +
-                        "JOIN cita c ON c.ID_Cli = cli.ID_Cli where ID_Emp=? and c.Fecha_Hora BETWEEN ? AND ? ORDER BY c.Fecha_Hora ASC;";//Este es un ejemplo, no es la consulta real
+                query="SELECT c.ID_Cita,c.ID_Cli,cli.Nombre_C,cli.Apellidos_C,cli.Tel_C,cli.Email_C,c.Fecha_Hora,c.Consultorio \n" +
+                        "FROM cita c JOIN cliente cli  ON c.ID_Cli = cli.ID_Cli \n" +
+                        "WHERE c.ID_Cita NOT IN (SELECT ID_Cita FROM expediente) AND ID_Emp=? \n" +
+                        "and c.Fecha_Hora BETWEEN ? AND ? ORDER BY c.Fecha_Hora ASC";//Este es un ejemplo, no es la consulta real
                 ps=conn.prepareCall(query);
                 ps.setInt(1, conexionMySQL.getEmpleadoActivo());
                 System.out.println(conexionMySQL.getEmpleadoActivo()+" "+fechaInicio +"  "+fechaFin);
