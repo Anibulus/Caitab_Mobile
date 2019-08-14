@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,8 +54,20 @@ public class Expediente extends AppCompatActivity {
         conexionMySQL=new Conexion();
         System.out.println("id==="+paciente.getId_paciente());
         llenarExpediente();
+
         if(usuario == null)
             expulsar();
+
+        expediente.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent act=new Intent(Expediente.this,Descripcion.class);
+                act.putExtra("anterior","Expediente");
+                act.putExtra("idCita",llenado.get(i).getIdCita());
+                act.putExtra("idCliente",paciente.getId_paciente());
+                startActivity(act);
+            }
+        });//Fin del listView
     }//Fin de onCreate
 
     private void expulsar() {

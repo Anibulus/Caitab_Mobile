@@ -111,9 +111,9 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
                             try {
                                 if (modificarCita()) {
                                     Toast.makeText(getApplicationContext(), "Se ha corregido correctamente", Toast.LENGTH_SHORT).show();
-                                    Intent regreso = new Intent(datosCita.this, Agenda.class);
-                                    regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
-                                    startActivity(regreso);
+                                    //Intent regreso = new Intent(datosCita.this, Agenda.class);
+                                    //regreso.putExtra(IntentExtras.USUARIO.llave, usuario);
+                                    //startActivity(regreso);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "No se ha podido modificar", Toast.LENGTH_SHORT).show();
                                 }
@@ -141,6 +141,7 @@ public class datosCita extends AppCompatActivity implements View.OnClickListener
                                 intent.putExtra("idCita", idCita);
                                 intent.putExtra("idCliente", cita.getId_paciente());
                                 intent.putExtra("Cita", cita);
+                                intent.putExtra("anterior", "Cita");
                                 intent.putExtra(IntentExtras.DESDE.llave, ListaActividades.MENU.nombre);
                                 startActivity(intent);
                             } else {
