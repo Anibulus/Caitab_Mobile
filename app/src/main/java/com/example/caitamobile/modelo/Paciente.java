@@ -7,10 +7,10 @@ public class Paciente implements Parcelable {
     private int id_paciente;
     private String nombre;
     private String apellidos;
-    private int telefono;
+    private String telefono;
     private String correo;
 
-    public Paciente(int id_paciente, String nombre, String apellidos, int telefono, String correo) {
+    public Paciente(int id_paciente, String nombre, String apellidos, String telefono, String correo) {
         this.id_paciente = id_paciente;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -45,11 +45,11 @@ public class Paciente implements Parcelable {
         this.apellidos = apellidos;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
@@ -65,7 +65,7 @@ public class Paciente implements Parcelable {
         id_paciente = in.readInt();
         nombre = in.readString();
         apellidos = in.readString();
-        telefono = in.readInt();
+        telefono = in.readString();
         correo = in.readString();
     }
 
@@ -79,7 +79,7 @@ public class Paciente implements Parcelable {
         dest.writeInt(id_paciente);
         dest.writeString(nombre);
         dest.writeString(apellidos);
-        dest.writeInt(telefono);
+        dest.writeString(telefono);
         dest.writeString(correo);
     }
 
